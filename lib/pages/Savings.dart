@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mileagecalculator/Database/database.dart';
+import 'package:mileagecalculator/Database/datamodel.dart';
 
 class CompareWidget extends StatefulWidget {
   @override
@@ -6,21 +8,29 @@ class CompareWidget extends StatefulWidget {
 }
 
 class _CompareWidgetState extends State<CompareWidget> {
-  late TextEditingController textController1;
-  late TextEditingController textController2;
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  TextEditingController electricity = TextEditingController();
+  TextEditingController petrol = TextEditingController();
+  List<DataModel> datas = [];
+  bool fetching = true;
+  late DB db;
 
   @override
   void initState() {
     super.initState();
-    textController1 = TextEditingController();
-    textController2 = TextEditingController();
+    db = DB();
+    getdata();
+  }
+
+  void getdata() async {
+    datas = await db.getData();
+    setState(() {
+      fetching = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
       backgroundColor: Color(0xFF22262B),
       body: SafeArea(
         child: Container(
@@ -90,7 +100,7 @@ class _CompareWidgetState extends State<CompareWidget> {
                             child: Padding(
                               padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
                               child: TextFormField(
-                                controller: textController1,
+                                controller: electricity,
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   hintText: 'Elecrticity Unit Charges',
@@ -134,20 +144,6 @@ class _CompareWidgetState extends State<CompareWidget> {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 10, 10, 0),
-                            child: IconButton(
-                              onPressed: () {
-                                print('IconButton pressed ...');
-                              },
-                              icon: Icon(
-                                Icons.add_circle,
-                                color: Color(0xFF8CEED2),
-                                size: 45,
-                              ),
-                              iconSize: 45,
-                            ),
-                          )
                         ],
                       ),
                       Row(
@@ -157,7 +153,7 @@ class _CompareWidgetState extends State<CompareWidget> {
                             child: Padding(
                               padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
                               child: TextFormField(
-                                controller: textController2,
+                                controller: petrol,
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   hintText: 'Petro Price',
@@ -201,24 +197,116 @@ class _CompareWidgetState extends State<CompareWidget> {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 10, 10, 0),
-                            child: IconButton(
-                              onPressed: () {
-                                print('IconButton pressed ...');
-                              },
-                              icon: Icon(
-                                Icons.add_circle,
-                                color: Color(0xFF8CEED2),
-                                size: 45,
-                              ),
-                              iconSize: 45,
-                            ),
-                          )
                         ],
+                      ),
+                      Align(
+                        alignment: Alignment(0, 0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment(0.8, 0),
+                                child: IconButton(
+                                  onPressed: () {
+                                    //print(distance);
+                                    db.insertData(DataModel(
+                                        electricity: electricity.text,
+                                        petrol: petrol.text));
+                                    print('IconButton pressed ...');
+                                  },
+                                  icon: Icon(
+                                    Icons.add_circle,
+                                    color: Color(0xFF8CEED2),
+                                    size: 50,
+                                  ),
+                                  iconSize: 50,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       )
                     ],
                   ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.fromLTRB(0, 335, 0, 0),
+                child: ListView(
+                  children: datas.map((trip) {
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.grey,
+                              style: BorderStyle.solid,
+                              width: 2),
+                        ),
+                      ),
+                      //color: Colors.white,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            SingleChildScrollView(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      SizedBox(width: 30),
+                                      Text(
+                                        trip.title.toString(),
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      SizedBox(width: 30),
+                                      Text(
+                                        "EV  \u{20B9}" +
+                                            trip.electricity.toString(),
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      SizedBox(width: 30),
+                                      Text(
+                                        "Petrol  \u{20B9}" +
+                                            trip.petrol.toString(),
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                SizedBox(width: 0),
+                                Text("Date Time - " +
+                                    trip.dateTimeadd.toString()),
+                                SizedBox(width: 50),
+                                IconButton(
+                                    icon: Icon(Icons.delete),
+                                    color: Colors.white,
+                                    onPressed: () {}),
+                                SizedBox(width: 1),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
               )
             ],
