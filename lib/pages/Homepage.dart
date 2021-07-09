@@ -5,6 +5,7 @@ import 'package:mileagecalculator/Database/datamodel.dart';
 import 'package:mileagecalculator/pages/responsive.dart';
 import 'package:mileagecalculator/Database/database.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePageWidget extends StatefulWidget {
   @override
@@ -31,8 +32,33 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   void initState() {
     super.initState();
+    if(trip_name!= null)
+    {
+      setState(() {
+        titleController.text = trip_name;
+      });
+    }
+    if(start_km!= null)
+    {
+      setState(() {
+        startkmController.text = start_km;
+      });
+    }
+    if(start_charge_percentage!= null)
+    {
+      setState(() {
+        startchargingController.text = start_charge_percentage;        
+      });
+    }
     db = DB();
     getdata();
+  }
+
+  void setDatatoSP() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('trip_name', titleController.text);
+    prefs.setString('start_km', startkmController.text);
+    prefs.setString('start_charge_percentage',startchargingController.text);
   }
 
   void getdata() async {
@@ -74,7 +100,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           style: TextButton.styleFrom(
                             primary: Color(0xFF03DAC6),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              titleController.text = "";
+                              startchargingController.text = "";
+                              startkmController.text = "";
+                              endkmController.text = "";
+                              endchargingController.text = "";
+                            });
+                          },
                           icon: Icon(Icons.clear_all),
                           label: Text("Clear All"),
                         ),
@@ -495,25 +529,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           width: 120,
                         ),
                         onPressed: () {
-                          // statrtdistance =
-                          //     int.parse(startkmController.text);
-                          // enddistance = int.parse(endkmController.text);
-                          // distance = enddistance - statrtdistance;
-                          // statrtCharging =
-                          //     int.parse(startchargingController.text);
-                          // endCharging =
-                          //     int.parse(endchargingController.text);
-                          // charging = statrtCharging - endCharging;
-                          // var patrolcost = 32;
-                          // var electricitycost = 7;
-                          // print(distance);
-                          // db.insertData(DataModel(
-                          //     title: titleController.text,
-                          //     distance: distance.toString(),
-                          //     savecharging: charging.toString(),
-                          //     dateTimeadd: datetime,
-                          //     petrol: patrolcost.toString(),
-                          //     electricity: electricitycost.toString()));
+                          setDatatoSP();
                           print('IconButton pressed ...');
                         },
                       ),

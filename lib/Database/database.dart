@@ -2,6 +2,10 @@ import 'package:mileagecalculator/Database/datamodel.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+var trip_name;
+var start_km;
+var start_charge_percentage;
+
 class DB {
   Future<Database> initDB() async {
     String path = await getDatabasesPath();

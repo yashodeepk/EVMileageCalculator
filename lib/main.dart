@@ -3,8 +3,16 @@ import 'package:mileagecalculator/pages/Homepage.dart';
 import 'package:mileagecalculator/pages/Savings.dart';
 import 'package:mileagecalculator/pages/datapage.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mileagecalculator/Database/database.dart';
 
-void main() => runApp(MyApp());
+Future<void> main() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  trip_name = prefs.getString('trip_name');
+  start_km = prefs.getString('start_km');
+  start_charge_percentage = prefs.getString('start_charge_percentage');
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
