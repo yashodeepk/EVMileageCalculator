@@ -12,6 +12,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   sqflite: ^2.0.0+3
   intl: ^0.17.0
+  google_fonts: ^2.1.0
+  shared_preferences: ^2.0.6
+  rive_splash_screen: ^0.1.0
+  auto_size_text: ^3.0.0-nullsafety.0
 
 dev_dependencies:
   flutter_test:
@@ -20,7 +24,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+  assets:
+    - assets/animation.riv
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
