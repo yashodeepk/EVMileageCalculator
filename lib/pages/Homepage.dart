@@ -61,6 +61,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     prefs.setString('start_charge_percentage',startchargingController.text);
   }
 
+  void removeDatatoSP() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('trip_name');
+    await prefs.remove('start_km');
+    await prefs.remove('start_charge_percentage');
+  }
+
   void getdata() async {
     data = db.getData();
     datas = await db.getData();
@@ -107,6 +114,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               startkmController.text = "";
                               endkmController.text = "";
                               endchargingController.text = "";
+                              removeDatatoSP();
                             });
                           },
                           icon: Icon(Icons.clear_all),
@@ -486,25 +494,68 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           width: 120,
                         ),
                         onPressed: () {
-                          statrtdistance = int.parse(startkmController.text);
-                          enddistance = int.parse(endkmController.text);
-                          distance = enddistance - statrtdistance;
-                          statrtCharging =
-                              int.parse(startchargingController.text);
-                          endCharging = int.parse(endchargingController.text);
-                          charging = statrtCharging - endCharging;
-                          var patrolcost = 32;
-                          var electricitycost = 7;
-                          print(distance);
-                          db.insertData(DataModel(
-                              title: titleController.text,
-                              distance: distance.toString(),
-                              savecharging: charging.toString(),
-                              dateTimeadd: datetime,
-                              petrol: patrolcost.toString(),
-                              electricity: electricitycost.toString()));
-                          getdata();
-                          print('IconButton pressed ...');
+                          try{
+                            statrtdistance = int.parse(startkmController.text);
+                            enddistance = int.parse(endkmController.text);
+                            distance = enddistance - statrtdistance;
+                            statrtCharging =
+                                int.parse(startchargingController.text);
+                            endCharging = int.parse(endchargingController.text);
+                            charging = statrtCharging - endCharging;
+                            var patrolcost = 32; //Need Calculations
+                            var electricitycost = 7; //Need calculations
+                            print(distance);
+                            if(distance > 0 && charging > 0)
+                            {
+                              db.insertData(DataModel(
+                                  title: titleController.text,
+                                  distance: distance.toString(),
+                                  savecharging: charging.toString(),
+                                  dateTimeadd: datetime,
+                                  petrol: patrolcost.toString(),
+                                  electricity: electricitycost.toString()));
+                              getdata();
+                              removeDatatoSP();
+                              setState(() {
+                                titleController.text = "";
+                                startchargingController.text = "";
+                                startkmController.text = "";
+                                endkmController.text = "";
+                                endchargingController.text = "";
+                              });
+                            }
+                            else
+                            {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              behavior: SnackBarBehavior.floating,
+                              content: Text("Oops! Data doesn't seems right..", style:  TextStyle(color : Colors.white),),
+                              duration: Duration(seconds: 2),
+                              backgroundColor: Color(0xFF03ADC6),
+                              margin: EdgeInsets.fromLTRB(20.0, 0, 20.0, 60.0),
+                              action: SnackBarAction(
+                                label: 'CLOSE',
+                                textColor: Colors.white,
+                                onPressed: ScaffoldMessenger.of(context).hideCurrentSnackBar,
+                              ),
+                            ));
+                            }
+                            print('IconButton pressed ...');
+                          }
+                          on Exception catch (_)
+                          {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              behavior: SnackBarBehavior.floating,
+                              content: Text("Oops! Data doesn't seems right..", style:  TextStyle(color : Colors.white),),
+                              duration: Duration(seconds: 2),
+                              backgroundColor: Color(0xFF03ADC6),
+                              margin: EdgeInsets.fromLTRB(20.0, 0, 20.0, 60.0),
+                              action: SnackBarAction(
+                                label: 'CLOSE',
+                                textColor: Colors.white,
+                                onPressed: ScaffoldMessenger.of(context).hideCurrentSnackBar,
+                              ),
+                            ));
+                          }
                         },
                       ),
                       TextButton(
