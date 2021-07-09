@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mileagecalculator/Database/database.dart';
 import 'package:mileagecalculator/Database/datamodel.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class CompareWidget extends StatefulWidget {
   @override
@@ -31,6 +33,15 @@ class _CompareWidgetState extends State<CompareWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFF22262B),
+        title: Center(
+          child: Text(
+            "Savings",
+            style: TextStyle(fontSize: 24),
+          ),
+        ),
+      ),
       backgroundColor: Color(0xFF22262B),
       body: SafeArea(
         child: Container(
@@ -44,195 +55,45 @@ class _CompareWidgetState extends State<CompareWidget> {
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
-                              child: Text(
-                                'Savings',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  color: Color(0xFF8CEED2),
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
                       Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment(0, 0),
-                              child: Card(
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                color: Color(0xFF43464C),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(90, 10, 90, 10),
-                                  child: Text(
-                                    '₹40,000',
-                                    style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      color: Color(0xFF8CEED2),
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: Container(
+                              padding: EdgeInsets.all(20),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF03ADC6),
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(24),
+                                    bottomRight: Radius.circular(24),
+                                    topLeft: Radius.circular(24),
+                                    topRight: Radius.circular(24),
                                   ),
                                 ),
+                                child: Center(
+                                  child: Text('₹40,000',
+                                      style: GoogleFonts.getFont(
+                                        'Poppins',
+                                        fontSize: 24,
+                                        color: Color(0xFF22262B),
+                                        fontWeight: FontWeight.w600,
+                                      )),
+                                ),
+                                height: 120,
+                                width: double.infinity,
                               ),
                             ),
                           )
                         ],
                       ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
-                              child: TextFormField(
-                                controller: electricity,
-                                obscureText: false,
-                                decoration: InputDecoration(
-                                  hintText: 'Elecrticity Unit Charges',
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    color: Color(0xFF6B6B6B),
-                                    fontSize: 20,
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.transparent,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(20),
-                                      bottomRight: Radius.circular(20),
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20),
-                                    ),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.transparent,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(20),
-                                      bottomRight: Radius.circular(20),
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20),
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: Color(0xFF43464C),
-                                ),
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  color: Color(0xFF6B6B6B),
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
-                              child: TextFormField(
-                                controller: petrol,
-                                obscureText: false,
-                                decoration: InputDecoration(
-                                  hintText: 'Petro Price',
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    color: Color(0xFF6B6B6B),
-                                    fontSize: 20,
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.transparent,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(20),
-                                      bottomRight: Radius.circular(20),
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20),
-                                    ),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.transparent,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(20),
-                                      bottomRight: Radius.circular(20),
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20),
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: Color(0xFF43464C),
-                                ),
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  color: Color(0xFF6B6B6B),
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Align(
-                        alignment: Alignment(0, 0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment(0.8, 0),
-                                child: IconButton(
-                                  onPressed: () {
-                                    //print(distance);
-                                    db.insertData(DataModel(
-                                        electricity: electricity.text,
-                                        petrol: petrol.text));
-                                    print('IconButton pressed ...');
-                                  },
-                                  icon: Icon(
-                                    Icons.add_circle,
-                                    color: Color(0xFF8CEED2),
-                                    size: 50,
-                                  ),
-                                  iconSize: 50,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
                     ],
                   ),
                 ),
               ),
               Container(
-                padding: EdgeInsets.fromLTRB(0, 335, 0, 0),
+                padding: EdgeInsets.fromLTRB(20, 150, 20, 10),
                 child: ListView(
                   children: datas.map((trip) {
                     return Container(
@@ -251,50 +112,61 @@ class _CompareWidgetState extends State<CompareWidget> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             SingleChildScrollView(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      SizedBox(width: 30),
-                                      Text(
-                                        trip.title.toString(),
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.white,
+                              scrollDirection: Axis.horizontal,
+                              child: SingleChildScrollView(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Row(
+                                      verticalDirection: VerticalDirection.up,
+                                      children: <Widget>[
+                                        AutoSizeText(
+                                          trip.title.toString(),
+                                          style: GoogleFonts.getFont(
+                                            'Poppins',
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                          ),
+                                          maxLines: 1,
                                         ),
-                                      ),
-                                      SizedBox(width: 30),
-                                      Text(
-                                        "EV  \u{20B9}" +
-                                            trip.electricity.toString(),
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.white,
+                                        SizedBox(width: 30),
+                                        AutoSizeText(
+                                          "EV  ₹" + trip.electricity.toString(),
+                                          style: GoogleFonts.getFont(
+                                            'Poppins',
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                          ),
+                                          maxLines: 1,
                                         ),
-                                      ),
-                                      SizedBox(width: 30),
-                                      Text(
-                                        "Petrol  \u{20B9}" +
-                                            trip.petrol.toString(),
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.white,
+                                        SizedBox(width: 30),
+                                        AutoSizeText(
+                                          "Petrol  ₹" + trip.petrol.toString(),
+                                          style: GoogleFonts.getFont(
+                                            'Poppins',
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                          ),
+                                          maxLines: 1,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 SizedBox(width: 0),
-                                Text("Date Time - " +
-                                    trip.dateTimeadd.toString()),
-                                SizedBox(width: 50),
+                                Text(
+                                  "Date Time - " + trip.dateTimeadd.toString(),
+                                  style: GoogleFonts.getFont(
+                                    'Poppins',
+                                  ),
+                                ),
+                                SizedBox(width: 40),
                                 IconButton(
                                     icon: Icon(Icons.delete),
                                     color: Colors.white,

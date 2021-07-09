@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:mileagecalculator/pages/Homepage.dart';
 import 'package:mileagecalculator/pages/Savings.dart';
+import 'package:mileagecalculator/pages/datapage.dart';
+import 'package:rive_splash_screen/rive_splash_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mileagecalculator/Database/database.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  trip_name = prefs.getString('trip_name');
+  start_km = prefs.getString('start_km');
+  start_charge_percentage = prefs.getString('start_charge_percentage');
   runApp(MyApp());
 }
 
@@ -13,7 +23,17 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData.dark(),
-      home: MyHomePage(),
+      //home: MyHomePage(),
+      home: SplashScreen.navigate(
+        backgroundColor: Color(0xFF000000),
+        name: 'assets/animation.riv',
+        next: (context) => MyHomePage(),
+        startAnimation: 'ok',
+        isLoading: false,
+        //alignment: Alignment.center,
+        // width: 20,
+        // height: 20,
+      ),
     );
   }
 }
@@ -26,10 +46,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int selectedPage = 0;
 
-  final _pageOptions = [
-    HomePageWidget(),
-    CompareWidget(),
-  ];
+  final _pageOptions = [HomePageWidget(), CompareWidget(), DataPage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: _pageOptions[selectedPage],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Color(0xFF03ADC6),
         backgroundColor: Color(0xFF22262B),
         items: [
           BottomNavigationBarItem(
@@ -46,6 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.savings_sharp),
             label: 'Savings',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.data_saver_on_rounded),
+            label: 'Database',
           ),
         ],
         currentIndex: selectedPage,
