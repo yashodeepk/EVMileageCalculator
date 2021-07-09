@@ -667,7 +667,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           icon: Icon(Icons.delete),
                                           color: Colors.white,
                                           onPressed: () {
-                                            db.delete(trip.id ?? 0);
+                                            setState(() {
+                                              db.delete(trip.id ?? 0);
+                                              getdata();
+                                            });
                                           }),
                                       SizedBox(width: 1),
                                     ],
