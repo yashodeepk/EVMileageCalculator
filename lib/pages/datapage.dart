@@ -11,11 +11,10 @@ class DataPage extends StatefulWidget {
 }
 
 class _DataPageState extends State<DataPage> {
-  late Future<List<DataModel>> data;
+  Future<List<DataModel>>? data;
   List<DataModel> datas = [];
-  bool fetching = true;
-  late DB db;
-
+  DB? db;
+  bool? fetching = true;
   @override
   void initState() {
     super.initState();
@@ -24,8 +23,8 @@ class _DataPageState extends State<DataPage> {
   }
 
   void getdata() async {
-    data = db.getData();
-    datas = await db.getData();
+    data = db!.getData();
+    datas = await db!.getData();
     setState(() {
       fetching = false;
     });
@@ -36,55 +35,131 @@ class _DataPageState extends State<DataPage> {
     return Scaffold(
       backgroundColor: Color(0xFF22262B),
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: Color(0xFF22262B),
         title: Center(child: Text("Database")),
       ),
-      body: Container(
-        //color: Color(0xFFD7D6D5),
-        padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-        child: DataTable(
-          columnSpacing: 45,
-          columns: [
-            DataColumn(
-                label: Text(
-              "Title",
-              style: GoogleFonts.getFont(
-                'Poppins',
-                fontSize: 18,
-                color: Color(0xFF03ADC6),
-              ),
-            )),
-            DataColumn(
-                label: Text(
-              "Distance",
-              style: GoogleFonts.getFont(
-                'Poppins',
-                fontSize: 18,
-                color: Color(0xFF03ADC6),
-              ),
-            )),
-            DataColumn(
-                label: Text(
-              "Charge",
-              //  TextStyle(
-              //
-              //     fontSize: 18,
-              //     fontWeight: FontWeight.w500),
-              style: GoogleFonts.getFont(
-                'Poppins',
-                fontSize: 18,
-                color: Color(0xFF03ADC6),
-              ),
-            )),
-          ],
-          rows: datas
-              .map<DataRow>((element) => DataRow(cells: [
-                    DataCell(Text(element.title.toString())),
-                    DataCell(Text(element.distance.toString())),
-                    DataCell(Text(element.savecharging.toString())),
-                  ]))
-              .toList(),
-        ),
+      body: Stack(
+        children: [
+          Container(
+              padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+              child: Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Title",
+                      style: GoogleFonts.getFont(
+                        'Poppins',
+                        fontSize: 18,
+                        color: Color(0xFF03ADC6),
+                      ),
+                    ),
+                    Text(
+                      "Distance",
+                      style: GoogleFonts.getFont(
+                        'Poppins',
+                        fontSize: 18,
+                        color: Color(0xFF03ADC6),
+                      ),
+                    ),
+                    Text(
+                      "Charge",
+                      style: GoogleFonts.getFont(
+                        'Poppins',
+                        fontSize: 18,
+                        color: Color(0xFF03ADC6),
+                      ),
+                    ),
+                  ],
+                ),
+              ])),
+          Container(
+              padding: EdgeInsets.fromLTRB(15, 40, 15, 0),
+              child: FutureBuilder<List<DataModel>>(
+                  future: data,
+                  builder: (context, snapshot) {
+                    return ListView(
+                      children: datas.map((trip) {
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                  color: Colors.grey,
+                                  style: BorderStyle.solid,
+                                  width: 2),
+                            ),
+                          ),
+                          //color: Colors.white,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      trip.title ?? "",
+                                      style: GoogleFonts.getFont(
+                                        'Poppins',
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    //SizedBox(width: 40),
+                                    Text(
+                                      trip.distance.toString() + " KM",
+                                      style: GoogleFonts.getFont(
+                                        'Poppins',
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    //SizedBox(width: 40),
+                                    Text(
+                                      trip.savecharging.toString() + "% used",
+                                      style: GoogleFonts.getFont(
+                                        'Poppins',
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      "Date Time - " +
+                                          trip.dateTimeadd.toString(),
+                                      style: GoogleFonts.getFont(
+                                        'Poppins',
+                                      ),
+                                    ),
+                                    //SizedBox(width: 40),
+                                    IconButton(
+                                        icon: Icon(Icons.delete),
+                                        color: Colors.white,
+                                        onPressed: () {
+                                          setState(() {
+                                            db!.delete(trip.id??0);
+                                            getdata();
+                                          });
+                                        }),
+                                    //SizedBox(width: 1),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  }))
+        ],
       ),
     );
   }

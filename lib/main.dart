@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mileagecalculator/pages/Homepage.dart';
 import 'package:mileagecalculator/pages/Savings.dart';
+import 'package:mileagecalculator/pages/WelcomePage.dart';
 import 'package:mileagecalculator/pages/datapage.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,9 +31,6 @@ class MyApp extends StatelessWidget {
         next: (context) => MyHomePage(),
         startAnimation: 'ok',
         isLoading: false,
-        //alignment: Alignment.center,
-        // width: 20,
-        // height: 20,
       ),
     );
   }
@@ -46,7 +44,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int selectedPage = 0;
 
-  final _pageOptions = [HomePageWidget(), CompareWidget(), DataPage()];
+  final _pageOptions = [
+    HomePageWidget(),
+    CompareWidget(),
+    DataPage(),
+    WelcomePageWidget()
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: _pageOptions[selectedPage],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        elevation: 0,
         selectedItemColor: Color(0xFF03ADC6),
         backgroundColor: Color(0xFF22262B),
         items: [
@@ -64,6 +68,10 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.savings_sharp),
             label: 'Savings',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.data_saver_on_rounded),
+            label: 'Database',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.data_saver_on_rounded),

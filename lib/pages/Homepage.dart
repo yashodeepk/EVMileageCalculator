@@ -22,6 +22,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   late Future<List<DataModel>> data;
   List<DataModel> datas = [];
   bool fetching = true;
+  bool bottomdialoag = true;
   late int distance;
   late int charging;
   late int statrtdistance;
@@ -32,22 +33,19 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   void initState() {
     super.initState();
-    if(trip_name!= null)
-    {
+    if (trip_name != null) {
       setState(() {
         titleController.text = trip_name;
       });
     }
-    if(start_km!= null)
-    {
+    if (start_km != null) {
       setState(() {
         startkmController.text = start_km;
       });
     }
-    if(start_charge_percentage!= null)
-    {
+    if (start_charge_percentage != null) {
       setState(() {
-        startchargingController.text = start_charge_percentage;        
+        startchargingController.text = start_charge_percentage;
       });
     }
     db = DB();
@@ -58,7 +56,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('trip_name', titleController.text);
     prefs.setString('start_km', startkmController.text);
-    prefs.setString('start_charge_percentage',startchargingController.text);
+    prefs.setString('start_charge_percentage', startchargingController.text);
   }
 
   void removeDatatoSP() async {
@@ -81,6 +79,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: Color(0xFF22262B),
         automaticallyImplyLeading: false,
         title: Center(
@@ -494,7 +493,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           width: 120,
                         ),
                         onPressed: () {
-                          try{
+                          try {
                             statrtdistance = int.parse(startkmController.text);
                             enddistance = int.parse(endkmController.text);
                             distance = enddistance - statrtdistance;
@@ -505,8 +504,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             var patrolcost = 32; //Need Calculations
                             var electricitycost = 7; //Need calculations
                             print(distance);
-                            if(distance > 0 && charging > 0)
-                            {
+                            if (distance > 0 && charging > 0) {
                               db.insertData(DataModel(
                                   title: titleController.text,
                                   distance: distance.toString(),
@@ -523,36 +521,42 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 endkmController.text = "";
                                 endchargingController.text = "";
                               });
-                            }
-                            else
-                            {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              behavior: SnackBarBehavior.floating,
-                              content: Text("Oops! Data doesn't seems right..", style:  TextStyle(color : Colors.white),),
-                              duration: Duration(seconds: 2),
-                              backgroundColor: Color(0xFF03ADC6),
-                              margin: EdgeInsets.fromLTRB(20.0, 0, 20.0, 60.0),
-                              action: SnackBarAction(
-                                label: 'CLOSE',
-                                textColor: Colors.white,
-                                onPressed: ScaffoldMessenger.of(context).hideCurrentSnackBar,
-                              ),
-                            ));
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                content: Text(
+                                  "Oops! Data doesn't seems right..",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                duration: Duration(seconds: 2),
+                                backgroundColor: Color(0xFF03ADC6),
+                                margin:
+                                    EdgeInsets.fromLTRB(20.0, 0, 20.0, 60.0),
+                                action: SnackBarAction(
+                                  label: 'CLOSE',
+                                  textColor: Colors.white,
+                                  onPressed: ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar,
+                                ),
+                              ));
                             }
                             print('IconButton pressed ...');
-                          }
-                          on Exception catch (_)
-                          {
+                          } on Exception catch (_) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               behavior: SnackBarBehavior.floating,
-                              content: Text("Oops! Data doesn't seems right..", style:  TextStyle(color : Colors.white),),
+                              content: Text(
+                                "Oops! Data doesn't seems right..",
+                                style: TextStyle(color: Colors.white),
+                              ),
                               duration: Duration(seconds: 2),
                               backgroundColor: Color(0xFF03ADC6),
                               margin: EdgeInsets.fromLTRB(20.0, 0, 20.0, 60.0),
                               action: SnackBarAction(
                                 label: 'CLOSE',
                                 textColor: Colors.white,
-                                onPressed: ScaffoldMessenger.of(context).hideCurrentSnackBar,
+                                onPressed: ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar,
                               ),
                             ));
                           }
@@ -591,149 +595,122 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             ),
             Container(
               //color: Color(0xFFD7D6D5),
-              padding: EdgeInsets.fromLTRB(0, 300, 0, 0),
-              child: DataTable(
-                columnSpacing: 45,
-                columns: [
-                  DataColumn(
-                      label: Text(
+              padding: EdgeInsets.fromLTRB(15, 310, 15, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
                     "Title",
                     style: GoogleFonts.getFont(
                       'Poppins',
                       fontSize: 18,
                       color: Color(0xFF03ADC6),
                     ),
-                  )),
-                  DataColumn(
-                      label: Text(
+                  ),
+                  Text(
                     "Distance",
                     style: GoogleFonts.getFont(
                       'Poppins',
                       fontSize: 18,
                       color: Color(0xFF03ADC6),
                     ),
-                  )),
-                  DataColumn(
-                      label: Text(
+                  ),
+                  Text(
                     "Charge",
-                    //  TextStyle(
-                    //
-                    //     fontSize: 18,
-                    //     fontWeight: FontWeight.w500),
                     style: GoogleFonts.getFont(
                       'Poppins',
                       fontSize: 18,
                       color: Color(0xFF03ADC6),
                     ),
-                  )),
+                  ),
                 ],
-                rows: [],
-                // rows: datas
-                //     .map<DataRow>((element) => DataRow(cells: [
-                //           DataCell(Text(element.title.toString())),
-                //           DataCell(Text(element.distance.toString())),
-                //           DataCell(Text(element.savecharging.toString())),
-                //         ]))
-                //     .toList(),
               ),
             ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.fromLTRB(20, 355, 15, 0),
-                child: FutureBuilder<List<DataModel>>(
-                    future: data,
-                    builder: (context, snapshot) {
-                      return ListView(
-                        children: datas.map((trip) {
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 10),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                    color: Colors.grey,
-                                    style: BorderStyle.solid,
-                                    width: 2),
-                              ),
+            Container(
+              padding: EdgeInsets.fromLTRB(15, 360, 15, 0),
+              child: FutureBuilder<List<DataModel>>(
+                  future: data,
+                  builder: (context, snapshot) {
+                    return ListView(
+                      children: datas.map((trip) {
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                  color: Colors.grey,
+                                  style: BorderStyle.solid,
+                                  width: 2),
                             ),
-                            //color: Colors.white,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Row(
-                                          verticalDirection:
-                                              VerticalDirection.up,
-                                          children: <Widget>[
-                                            SizedBox(width: 5),
-                                            Text(
-                                              trip.title ?? "",
-                                              style: GoogleFonts.getFont(
-                                                'Poppins',
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            SizedBox(width: 40),
-                                            Text(
-                                              trip.distance.toString() + " KM",
-                                              style: GoogleFonts.getFont(
-                                                'Poppins',
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            SizedBox(width: 40),
-                                            Text(
-                                              trip.savecharging.toString() +
-                                                  "% used",
-                                              style: GoogleFonts.getFont(
-                                                'Poppins',
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Row(
-                                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        "Date Time - " +
-                                            trip.dateTimeadd.toString(),
-                                        style: GoogleFonts.getFont(
-                                          'Poppins',
-                                        ),
+                          ),
+                          //color: Colors.white,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      trip.title ?? "",
+                                      style: GoogleFonts.getFont(
+                                        'Poppins',
+                                        fontSize: 16,
+                                        color: Colors.white,
                                       ),
-                                      SizedBox(width: 40),
-                                      IconButton(
-                                          icon: Icon(Icons.delete),
-                                          color: Colors.white,
-                                          onPressed: () {
-                                            setState(() {
-                                              db.delete(trip.id ?? 0);
-                                              getdata();
-                                            });
-                                          }),
-                                      SizedBox(width: 1),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                    ),
+                                    //SizedBox(width: 40),
+                                    Text(
+                                      trip.distance.toString() + " KM",
+                                      style: GoogleFonts.getFont(
+                                        'Poppins',
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    //SizedBox(width: 40),
+                                    Text(
+                                      trip.savecharging.toString() + "% used",
+                                      style: GoogleFonts.getFont(
+                                        'Poppins',
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      "Date Time - " +
+                                          trip.dateTimeadd.toString(),
+                                      style: GoogleFonts.getFont(
+                                        'Poppins',
+                                      ),
+                                    ),
+                                    //SizedBox(width: 40),
+                                    IconButton(
+                                        icon: Icon(Icons.delete),
+                                        color: Colors.white,
+                                        onPressed: () {
+                                          setState(() {
+                                            db.delete(trip.id ?? 0);
+                                            getdata();
+                                          });
+                                        }),
+                                    //SizedBox(width: 1),
+                                  ],
+                                ),
+                              ],
                             ),
-                          );
-                        }).toList(),
-                      );
-                    }),
-              ),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  }),
             )
           ],
         ),

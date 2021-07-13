@@ -34,6 +34,7 @@ class _CompareWidgetState extends State<CompareWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: Color(0xFF22262B),
         title: Center(
           child: Text(
@@ -111,67 +112,58 @@ class _CompareWidgetState extends State<CompareWidget> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: SingleChildScrollView(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Row(
-                                      verticalDirection: VerticalDirection.up,
-                                      children: <Widget>[
-                                        AutoSizeText(
-                                          trip.title.toString(),
-                                          style: GoogleFonts.getFont(
-                                            'Poppins',
-                                            fontSize: 16,
-                                            color: Colors.white,
-                                          ),
-                                          maxLines: 1,
-                                        ),
-                                        SizedBox(width: 30),
-                                        AutoSizeText(
-                                          "EV  ₹" + trip.electricity.toString(),
-                                          style: GoogleFonts.getFont(
-                                            'Poppins',
-                                            fontSize: 16,
-                                            color: Colors.white,
-                                          ),
-                                          maxLines: 1,
-                                        ),
-                                        SizedBox(width: 30),
-                                        AutoSizeText(
-                                          "Petrol  ₹" + trip.petrol.toString(),
-                                          style: GoogleFonts.getFont(
-                                            'Poppins',
-                                            fontSize: 16,
-                                            color: Colors.white,
-                                          ),
-                                          maxLines: 1,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                AutoSizeText(
+                                  trip.title.toString(),
+                                  style: GoogleFonts.getFont(
+                                    'Poppins',
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                  maxLines: 1,
                                 ),
-                              ),
+                                //SizedBox(width: 30),
+                                AutoSizeText(
+                                  "EV  ₹" + trip.electricity.toString(),
+                                  style: GoogleFonts.getFont(
+                                    'Poppins',
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                  maxLines: 1,
+                                ),
+                                //SizedBox(width: 30),
+                                AutoSizeText(
+                                  "Petrol  ₹" + trip.petrol.toString(),
+                                  style: GoogleFonts.getFont(
+                                    'Poppins',
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                  maxLines: 1,
+                                ),
+                              ],
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                SizedBox(width: 0),
                                 Text(
                                   "Date Time - " + trip.dateTimeadd.toString(),
                                   style: GoogleFonts.getFont(
                                     'Poppins',
                                   ),
                                 ),
-                                SizedBox(width: 40),
                                 IconButton(
                                     icon: Icon(Icons.delete),
                                     color: Colors.white,
-                                    onPressed: () {}),
-                                SizedBox(width: 1),
+                                    onPressed: () {
+                                      setState(() {
+                                        db.delete(trip.id ?? 0);
+                                        getdata();
+                                      });
+                                    }),
                               ],
                             ),
                           ],
@@ -184,6 +176,11 @@ class _CompareWidgetState extends State<CompareWidget> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Color(0xFF03ADC6),
+        child: Icon(Icons.mode_edit),
       ),
     );
   }
