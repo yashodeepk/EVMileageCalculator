@@ -3,6 +3,7 @@ import 'package:mileagecalculator/Database/database.dart';
 import 'package:mileagecalculator/Database/datamodel.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:mileagecalculator/pages/WelcomePage.dart';
 
 class CompareWidget extends StatefulWidget {
   @override
@@ -178,7 +179,12 @@ class _CompareWidgetState extends State<CompareWidget> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => WelcomePageWidget()),
+          );
+        },
         backgroundColor: Color(0xFF03ADC6),
         child: Icon(Icons.mode_edit),
       ),

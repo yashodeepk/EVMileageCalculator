@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mileagecalculator/pages/Homepage.dart';
 import 'package:mileagecalculator/pages/Savings.dart';
-import 'package:mileagecalculator/pages/WelcomePage.dart';
 import 'package:mileagecalculator/pages/datapage.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,7 +47,6 @@ class _MyHomePageState extends State<MyHomePage> {
     HomePageWidget(),
     CompareWidget(),
     DataPage(),
-    WelcomePageWidget()
   ];
   @override
   Widget build(BuildContext context) {
@@ -68,10 +66,6 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.savings_sharp),
             label: 'Savings',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.data_saver_on_rounded),
-            label: 'Database',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.data_saver_on_rounded),

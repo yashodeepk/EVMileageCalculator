@@ -1,3 +1,5 @@
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -13,6 +15,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
   TextEditingController? textController4;
   TextEditingController? textController5;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  String? select = "Select";
 
   @override
   void initState() {
@@ -26,7 +29,20 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Color(0xFF22262B),
+        automaticallyImplyLeading: false,
+        title: Center(
+          child: Text(
+            "Setup Page",
+            style: TextStyle(fontSize: 24),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
       key: scaffoldKey,
       backgroundColor: Color(0xFF22262B),
       body: SafeArea(
@@ -34,21 +50,9 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
           children: [
             SingleChildScrollView(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Padding(
-                      padding: EdgeInsets.fromLTRB(20, 50, 20, 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text(
-                            'Setup Page',
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.w600),
-                          )
-                        ],
-                      )),
                   Container(
                     child: Image(
                       image: AssetImage('assets/1.png'),
@@ -57,197 +61,377 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                       //height: 140,
                     ),
                     width: double.infinity,
-                    height: MediaQuery.of(context).size.width / 2,
+                    height: MediaQuery.of(context).size.height / 4.2,
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(3),
-                      ],
-                      controller: textController1,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        hintText: 'Enter Battery Capacity in kWh',
-                        hintStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                        ),
-                        filled: true,
-                        fillColor: Color(0xFF43464C),
-                      ),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 23,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Text(
-                            'Petrol Prize       ',
-                            textAlign: TextAlign.start,
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: Center(
+                            child: Text(
+                              'Battery Capacity',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(3),
+                            ],
+                            controller: textController2,
+                            obscureText: false,
+                            decoration: InputDecoration(
+                              hintText: 'kWh',
+                              hintStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(20),
+                                  bottomRight: Radius.circular(20),
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(20),
+                                  bottomRight: Radius.circular(20),
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                              filled: true,
+                              fillColor: Color(0xFF43464C),
+                            ),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
                             ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: TextFormField(
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(3),
-                              ],
-                              controller: textController2,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                hintText: '₹',
-                                hintStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.transparent,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20),
-                                    bottomRight: Radius.circular(20),
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                  ),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.transparent,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20),
-                                    bottomRight: Radius.circular(20),
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                  ),
-                                ),
-                                filled: true,
-                                fillColor: Color(0xFF43464C),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: Center(
+                            child: Text(
+                              'Electricity Prize',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
                               ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(3),
+                            ],
+                            controller: textController4,
+                            obscureText: false,
+                            decoration: InputDecoration(
+                              hintText: '₹',
+                              hintStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(20),
+                                  bottomRight: Radius.circular(20),
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(20),
+                                  bottomRight: Radius.circular(20),
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                              filled: true,
+                              fillColor: Color(0xFF43464C),
+                            ),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: Center(
+                            child: Text(
+                              'Petrol Prize',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(3),
+                            ],
+                            controller: textController2,
+                            obscureText: false,
+                            decoration: InputDecoration(
+                              hintText: '₹',
+                              hintStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(20),
+                                  bottomRight: Radius.circular(20),
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(20),
+                                  bottomRight: Radius.circular(20),
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                              filled: true,
+                              fillColor: Color(0xFF43464C),
+                            ),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: Center(
+                            child: AutoSizeText(
+                              'Petrol Vehical Mileage',
+                              maxLines: 1,
+                              textAlign: TextAlign.start,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
                               ),
-                              textAlign: TextAlign.center,
                             ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(3),
+                            ],
+                            controller: textController2,
+                            obscureText: false,
+                            decoration: InputDecoration(
+                              hintText: 'Km/Ltr',
+                              hintStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(20),
+                                  bottomRight: Radius.circular(20),
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(20),
+                                  bottomRight: Radius.circular(20),
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                              filled: true,
+                              fillColor: Color(0xFF43464C),
+                            ),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Text(
-                            'Electricity Prize',
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment(0, 0),
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                              child: TextFormField(
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(3),
-                                ],
-                                controller: textController4,
-                                obscureText: false,
-                                decoration: InputDecoration(
-                                  hintText: '₹',
-                                  hintStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.transparent,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(20),
-                                      bottomRight: Radius.circular(20),
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20),
-                                    ),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.transparent,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(20),
-                                      bottomRight: Radius.circular(20),
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20),
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: Color(0xFF43464C),
-                                ),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                ),
-                                textAlign: TextAlign.center,
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: Center(
+                            child: Text(
+                              'Select currency',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
                               ),
                             ),
                           ),
                         ),
+                        Container(
+                            width: MediaQuery.of(context).size.width / 2,
+                            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                            child: Center(
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                decoration: BoxDecoration(
+                                    color: Color(0xff03adc6).withOpacity(0.7),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(24))),
+                                child: TextButton(
+                                  onPressed: () {
+                                    showCurrencyPicker(
+                                      context: context,
+                                      showFlag: true,
+                                      showCurrencyName: true,
+                                      showCurrencyCode: true,
+                                      onSelect: (Currency currency) {
+                                        setState(() {
+                                          select = currency.name +
+                                              " " +
+                                              currency.symbol;
+                                        });
+                                        print(
+                                            'Select currency: ${currency.name}');
+                                      },
+                                      favorite: ['INR'],
+                                    );
+                                  },
+                                  child: Text(
+                                    select!,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )),
                       ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      decoration: BoxDecoration(
+                          color: Color(0xff03adc6).withOpacity(0.7),
+                          borderRadius: BorderRadius.all(Radius.circular(24))),
+                      child: TextButton.icon(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.save_alt_rounded,
+                          color: Colors.white,
+                        ),
+                        label: Text(
+                          "Save",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -255,12 +439,6 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
             )
           ],
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        label: Text("Save"),
-        icon: Icon(Icons.save_alt_rounded),
       ),
     );
   }

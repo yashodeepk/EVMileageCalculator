@@ -37,7 +37,11 @@ class _DataPageState extends State<DataPage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Color(0xFF22262B),
-        title: Center(child: Text("Database")),
+        title: Center(
+            child: Text(
+          "Database",
+          style: TextStyle(fontSize: 24),
+        )),
       ),
       body: Stack(
         children: [
@@ -145,7 +149,7 @@ class _DataPageState extends State<DataPage> {
                                         color: Colors.white,
                                         onPressed: () {
                                           setState(() {
-                                            db!.delete(trip.id??0);
+                                            db!.delete(trip.id ?? 0);
                                             getdata();
                                           });
                                         }),
