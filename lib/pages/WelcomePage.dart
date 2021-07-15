@@ -2,6 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mileagecalculator/Database/database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WelcomePageWidget extends StatefulWidget {
   @override
@@ -9,27 +11,57 @@ class WelcomePageWidget extends StatefulWidget {
 }
 
 class _WelcomePageWidgetState extends State<WelcomePageWidget> {
-  TextEditingController? textController1;
-  TextEditingController? textController2;
-  TextEditingController? textController3;
-  TextEditingController? textController4;
-  TextEditingController? textController5;
+  TextEditingController batteryCapacityController = TextEditingController();
+  TextEditingController electricityPriceController = TextEditingController();
+  TextEditingController petrolPrizeController = TextEditingController();
+  TextEditingController petrolVehicalMileageController =
+      TextEditingController();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  String? select = "Select";
+  String select = "Select";
+  String logo = '';
 
   @override
   void initState() {
     super.initState();
-    textController1 = TextEditingController();
-    textController2 = TextEditingController();
-    textController3 = TextEditingController();
-    textController4 = TextEditingController();
-    textController5 = TextEditingController();
+    if (batteryCapacity != null) {
+      setState(() {
+        batteryCapacityController.text = batteryCapacity;
+      });
+    }
+    if (electricityPrice != null) {
+      setState(() {
+        electricityPriceController.text = electricityPrice;
+      });
+    }
+    if (petrolPrize != null) {
+      setState(() {
+        petrolPrizeController.text = petrolPrize;
+      });
+    }
+    if (petrolVehicalMileage != null) {
+      setState(() {
+        petrolVehicalMileageController.text = petrolVehicalMileage;
+      });
+    }
+    if (selectcurrency != null) {
+      setState(() {
+        logo = selectcurrency;
+      });
+    }
+  }
+
+  void setDatatoSP() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('battery_Capacity', batteryCapacityController.text);
+    prefs.setString('electricity_Price', electricityPriceController.text);
+    prefs.setString('petrol_Prize', petrolPrizeController.text);
+    prefs.setString(
+        'petrol_Vehical_Mileage', petrolVehicalMileageController.text);
+    prefs.setString('select_currency', logo);
   }
 
   @override
   Widget build(BuildContext context) {
-    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -89,7 +121,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                             inputFormatters: [
                               LengthLimitingTextInputFormatter(3),
                             ],
-                            controller: textController2,
+                            controller: batteryCapacityController,
                             obscureText: false,
                             decoration: InputDecoration(
                               hintText: 'kWh',
@@ -144,7 +176,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                           width: MediaQuery.of(context).size.width / 2,
                           child: Center(
                             child: Text(
-                              'Electricity Prize',
+                              'Electricity Price',
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 color: Colors.white,
@@ -161,7 +193,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                             inputFormatters: [
                               LengthLimitingTextInputFormatter(3),
                             ],
-                            controller: textController4,
+                            controller: electricityPriceController,
                             obscureText: false,
                             decoration: InputDecoration(
                               hintText: '₹',
@@ -216,7 +248,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                           width: MediaQuery.of(context).size.width / 2,
                           child: Center(
                             child: Text(
-                              'Petrol Prize',
+                              'Petrol Price',
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 color: Colors.white,
@@ -233,7 +265,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                             inputFormatters: [
                               LengthLimitingTextInputFormatter(3),
                             ],
-                            controller: textController2,
+                            controller: petrolPrizeController,
                             obscureText: false,
                             decoration: InputDecoration(
                               hintText: '₹',
@@ -305,7 +337,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                             inputFormatters: [
                               LengthLimitingTextInputFormatter(3),
                             ],
-                            controller: textController2,
+                            controller: petrolVehicalMileageController,
                             obscureText: false,
                             decoration: InputDecoration(
                               hintText: 'Km/Ltr',
@@ -391,6 +423,8 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                           select = currency.name +
                                               " " +
                                               currency.symbol;
+
+                                          logo = currency.symbol;
                                         });
                                         print(
                                             'Select currency: ${currency.name}');
@@ -398,11 +432,13 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                       favorite: ['INR'],
                                     );
                                   },
-                                  child: Text(
-                                    select!,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
+                                  child: Center(
+                                    child: AutoSizeText(
+                                      select,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -419,7 +455,10 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                           color: Color(0xff03adc6).withOpacity(0.7),
                           borderRadius: BorderRadius.all(Radius.circular(24))),
                       child: TextButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+                          setDatatoSP();
+                          print("set prefrence");
+                        },
                         icon: Icon(
                           Icons.save_alt_rounded,
                           color: Colors.white,

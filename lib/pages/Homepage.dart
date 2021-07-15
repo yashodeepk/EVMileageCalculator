@@ -33,6 +33,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   void initState() {
     super.initState();
+    //print("data length " + datas.length.toString());
     if (trip_name != null) {
       setState(() {
         titleController.text = trip_name;
@@ -516,6 +517,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 electricity: electricitycost.toString()));
                             getdata();
                             removeDatatoSP();
+                            for (int i = 0; i <= datas.length; i++) {
+                              print(i);
+                            }
+                            print(datas.length);
                             setState(() {
                               titleController.text = "";
                               startchargingController.text = "";
@@ -591,7 +596,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 ),
                 Container(
                   //color: Color(0xFFD7D6D5),
-                  padding: EdgeInsets.fromLTRB(15, 10, 15, 0),
+                  padding: EdgeInsets.fromLTRB(15, 10, 5, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -634,6 +639,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             //shrinkWrap: true,
                             children: datas.map((trip) {
                               return Container(
+                                padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
                                 decoration: BoxDecoration(
                                   border: Border(
                                     bottom: BorderSide(
@@ -650,7 +656,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         Text(
-                                          trip.title ?? "",
+                                          trip.title!,
                                           style: GoogleFonts.getFont(
                                             'Poppins',
                                             fontSize: 16,
