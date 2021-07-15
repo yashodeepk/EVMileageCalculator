@@ -18,7 +18,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   TextEditingController endkmController = TextEditingController();
   TextEditingController startchargingController = TextEditingController();
   TextEditingController endchargingController = TextEditingController();
-  String datetime = DateFormat('d/M/y hh:mm a').format(DateTime.now());
   late Future<List<DataModel>> data;
   List<DataModel> datas = [];
   bool fetching = true;
@@ -70,6 +69,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   void getdata() async {
     data = db.getData();
     datas = await db.getData();
+    datas = datas.reversed.toList();
     setState(() {
       fetching = false;
     });
@@ -512,7 +512,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 title: titleController.text,
                                 distance: distance.toString(),
                                 savecharging: charging.toString(),
-                                dateTimeadd: datetime,
+                                dateTimeadd: DateFormat('d/M/y hh:mm a')
+                                    .format(DateTime.now()),
                                 petrol: patrolcost.toString(),
                                 electricity: electricitycost.toString()));
                             getdata();
@@ -701,6 +702,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                             color: Colors.white,
                                             onPressed: () {
                                               setState(() {
+                                                print("Trip ID is " +
+                                                    trip.id.toString());
                                                 db.delete(trip.id ?? 0);
                                                 getdata();
                                               });
