@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +20,17 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
       TextEditingController();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   String select = "Select";
-  String logo = '';
+  var logo;
 
-  @override
-  void initState() {
-    super.initState();
+  void getSPData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    batteryCapacity = prefs.getString('battery_Capacity');
+    electricityPrice = prefs.getString('electricity_Price');
+    petrolPrize = prefs.getString('petrol_Prize');
+    petrolVehicalMileage = prefs.getString('petrol_Vehical_Mileage');
+    selectcurrency = prefs.getString('select_currency');
+
     if (batteryCapacity != null) {
       setState(() {
         batteryCapacityController.text = batteryCapacity;
@@ -45,9 +53,16 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
     }
     if (selectcurrency != null) {
       setState(() {
-        logo = selectcurrency;
+        logo = Currency.from(json: jsonDecode(selectcurrency));
+        select = logo.name + " " + logo.symbol;
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getSPData();
   }
 
   void setDatatoSP() async {
@@ -57,22 +72,27 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
     prefs.setString('petrol_Prize', petrolPrizeController.text);
     prefs.setString(
         'petrol_Vehical_Mileage', petrolVehicalMileageController.text);
-    prefs.setString('select_currency', logo);
+    String user = jsonEncode(logo);
+    prefs.setString('select_currency', user);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         elevation: 0,
         backgroundColor: Color(0xFF22262B),
         automaticallyImplyLeading: false,
-        title: Center(
-          child: Text(
-            "Setup Page",
-            style: TextStyle(fontSize: 24),
-            textAlign: TextAlign.center,
-          ),
+        title: Text(
+          "Setup Page",
+          style: TextStyle(fontSize: 24),
+          textAlign: TextAlign.center,
         ),
       ),
       key: scaffoldKey,
@@ -424,7 +444,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                               " " +
                                               currency.symbol;
 
-                                          logo = currency.symbol;
+                                          logo = currency;
                                         });
                                         print(
                                             'Select currency: ${currency.name}');
@@ -458,6 +478,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                         onPressed: () {
                           setDatatoSP();
                           print("set prefrence");
+                          Navigator.of(context).pop();
                         },
                         icon: Icon(
                           Icons.save_alt_rounded,

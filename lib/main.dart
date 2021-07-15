@@ -13,6 +13,13 @@ Future<void> main() async {
   trip_name = prefs.getString('trip_name');
   start_km = prefs.getString('start_km');
   start_charge_percentage = prefs.getString('start_charge_percentage');
+
+  batteryCapacity = prefs.getString('battery_Capacity');
+  electricityPrice = prefs.getString('electricity_Price');
+  petrolPrize = prefs.getString('petrol_Prize');
+  petrolVehicalMileage = prefs.getString('petrol_Vehical_Mileage');
+  selectcurrency = prefs.getString('select_currency');
+
   runApp(MyApp());
 }
 
