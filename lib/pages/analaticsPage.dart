@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mileagecalculator/Database/database.dart';
 import 'package:mileagecalculator/Database/datamodel.dart';
 import 'package:mileagecalculator/pages/datapage.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:currency_picker/currency_picker.dart';
 
 class analatics extends StatefulWidget {
   @override
@@ -20,12 +22,19 @@ class _analaticsState extends State<analatics> {
   List<DataModel> datas = [];
   DB? db;
   bool? fetching = true;
+  var logo;
 
   @override
   void initState() {
     super.initState();
     db = DB();
     getdata();
+
+    if (selectcurrency != null) {
+      setState(() {
+        logo = Currency.from(json: jsonDecode(selectcurrency));
+      });
+    }
   }
 
   void getdata() async {
@@ -135,7 +144,7 @@ class _analaticsState extends State<analatics> {
                             fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        " Rs",
+                        " " + logo.symbol,
                         style: TextStyle(
                           color: Colors.amber,
                           fontSize: 18,
@@ -165,7 +174,7 @@ class _analaticsState extends State<analatics> {
                             color: Colors.green),
                       ),
                       Text(
-                        " Rs",
+                        " " + logo.symbol,
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.green,
