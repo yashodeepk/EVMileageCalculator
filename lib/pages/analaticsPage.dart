@@ -34,6 +34,8 @@ class _analaticsState extends State<analatics> {
       setState(() {
         logo = Currency.from(json: jsonDecode(selectcurrency));
       });
+    } else {
+      logo.symbol = "Rs";
     }
   }
 
@@ -112,11 +114,14 @@ class _analaticsState extends State<analatics> {
                       Text(
                         "40",
                         style: TextStyle(
-                            fontSize: 52, fontWeight: FontWeight.bold),
+                            fontSize: 52,
+                            color: Colors.amber,
+                            fontWeight: FontWeight.bold),
                       ),
                       Text(
                         " km",
                         style: TextStyle(
+                          color: Colors.amber,
                           fontSize: 18,
                         ),
                       ),
@@ -139,14 +144,11 @@ class _analaticsState extends State<analatics> {
                       Text(
                         "34",
                         style: TextStyle(
-                            fontSize: 52,
-                            color: Colors.amber,
-                            fontWeight: FontWeight.bold),
+                            fontSize: 52, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         " " + logo.symbol,
                         style: TextStyle(
-                          color: Colors.amber,
                           fontSize: 18,
                         ),
                       ),
