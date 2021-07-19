@@ -5,6 +5,11 @@ import 'package:path/path.dart';
 var trip_name;
 var start_km;
 var start_charge_percentage;
+var batteryCapacity;
+var electricityPrice;
+var petrolPrize;
+var petrolVehicalMileage;
+var selectcurrency;
 
 class DB {
   Future<Database> initDB() async {

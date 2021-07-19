@@ -13,6 +13,13 @@ Future<void> main() async {
   trip_name = prefs.getString('trip_name');
   start_km = prefs.getString('start_km');
   start_charge_percentage = prefs.getString('start_charge_percentage');
+
+  batteryCapacity = prefs.getString('battery_Capacity');
+  electricityPrice = prefs.getString('electricity_Price');
+  petrolPrize = prefs.getString('petrol_Prize');
+  petrolVehicalMileage = prefs.getString('petrol_Vehical_Mileage');
+  selectcurrency = prefs.getString('select_currency');
+
   runApp(MyApp());
 }
 
@@ -30,9 +37,6 @@ class MyApp extends StatelessWidget {
         next: (context) => MyHomePage(),
         startAnimation: 'ok',
         isLoading: false,
-        //alignment: Alignment.center,
-        // width: 20,
-        // height: 20,
       ),
     );
   }
@@ -46,7 +50,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int selectedPage = 0;
 
-  final _pageOptions = [HomePageWidget(), CompareWidget(), DataPage()];
+  final _pageOptions = [
+    HomePageWidget(),
+    CompareWidget(),
+    DataPage(),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: _pageOptions[selectedPage],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        elevation: 0,
         selectedItemColor: Color(0xFF03ADC6),
         backgroundColor: Color(0xFF22262B),
         items: [
