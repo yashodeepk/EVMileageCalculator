@@ -95,6 +95,93 @@ class _analaticsState extends State<analatics> {
                     ),
                   ),
                 ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(40, 10, 20, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "40",
+                        style: TextStyle(
+                            fontSize: 52, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        " km",
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  "Average distance traveled in last 15 trips",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(40, 30, 20, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "34",
+                        style: TextStyle(
+                            fontSize: 52,
+                            color: Colors.amber,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        " Rs",
+                        style: TextStyle(
+                          color: Colors.amber,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  "Average Cost in last 15 trips",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(40, 30, 20, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "20",
+                        style: TextStyle(
+                            fontSize: 52,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green),
+                      ),
+                      Text(
+                        " Rs",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  "Average Savings in last 15 trips",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
               ],
             ),
           ),
