@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mileagecalculator/pages/Homepage.dart';
 import 'package:mileagecalculator/pages/Savings.dart';
-import 'package:mileagecalculator/pages/datapage.dart';
+import 'package:mileagecalculator/pages/analaticsPage.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mileagecalculator/Database/database.dart';
@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final _pageOptions = [
     HomePageWidget(),
     CompareWidget(),
-    DataPage(),
+    analatics(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -75,8 +75,8 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Savings',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.data_saver_on_rounded),
-            label: 'Database',
+            icon: Icon(Icons.analytics),
+            label: 'Analytics',
           ),
         ],
         currentIndex: selectedPage,
