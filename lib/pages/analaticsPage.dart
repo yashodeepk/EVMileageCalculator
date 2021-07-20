@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mileagecalculator/Database/database.dart';
 import 'package:mileagecalculator/Database/datamodel.dart';
 import 'package:mileagecalculator/pages/datapage.dart';
