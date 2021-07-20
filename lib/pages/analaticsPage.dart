@@ -16,8 +16,12 @@ class _analaticsState extends State<analatics> {
   Future<List<DataModel>>? data;
   List<DataModel> datas = [];
   DB? db;
-  bool? fetching = true;
+  bool fetching = true;
   var logo;
+  var avgDistance = 0.00;
+  var avgCost = 0.00;
+  var avgSavings = 0.00;
+  var tripCount = 0;
 
   List<Color> gradientColors = [
     const Color(0xFF03ADC6),
@@ -39,21 +43,49 @@ class _analaticsState extends State<analatics> {
   }
 
   List<FlSpot> convetDataModelToFlSpot() {
-    List<FlSpot> arrSpots = [];
-    var length;
+    if (!fetching) {
+      List<FlSpot> arrSpots = [];
+      avgDistance = 0.00;
+      avgCost = 0.00;
+      avgSavings = 0.00;
+      tripCount = 0;
 
-    if (datas.length > 15)
-      length = 15;
-    else
-      length = datas.length;
+      var length;
 
-    print("Data Length is " + datas.length.toString());
-    for (int dataIndex = 0; dataIndex < length; dataIndex++) {
-      arrSpots.add(FlSpot(double.parse(dataIndex.toString()),
-          double.parse(datas[dataIndex].distance.toString()) / 10));
+      if (datas.length > 15)
+        length = 15;
+      else
+        length = datas.length;
+
+      print("Data Length is " + datas.length.toString());
+      for (int dataIndex = 0; dataIndex < length; dataIndex++) {
+        print(datas[dataIndex].electricity.toString());
+        arrSpots.add(FlSpot(double.parse(dataIndex.toString()),
+            double.parse(datas[dataIndex].distance.toString()) / 10));
+        avgCost =
+            avgCost + double.parse(datas[dataIndex].electricity.toString());
+        avgSavings = avgSavings +
+            (double.parse(datas[dataIndex].petrol.toString()) -
+                double.parse(datas[dataIndex].electricity.toString()));
+        avgDistance =
+            avgDistance + double.parse(datas[dataIndex].distance.toString());
+      }
+      print("Arr Spots is " + arrSpots.toString());
+
+      setState(() {
+        tripCount = length;
+        print("tripcount is " + tripCount.toString());
+        avgCost = double.parse((avgCost / tripCount).toString());
+        print("Avg Cost is " + avgCost.toString());
+        avgSavings = double.parse((avgSavings / tripCount).toString());
+        print("Avg Savings is " + avgSavings.toString());
+        avgDistance = double.parse((avgDistance / tripCount).toString());
+        print("Avg Savings is " + avgDistance.toString());
+      });
+      return arrSpots;
+    } else {
+      return [];
     }
-    print("Arr Spots is " + arrSpots.toString());
-    return arrSpots;
   }
 
   void getdata() async {
@@ -130,7 +162,7 @@ class _analaticsState extends State<analatics> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "40",
+                        avgDistance.toString(),
                         style: TextStyle(
                             fontSize: 52,
                             color: Colors.amber,
@@ -147,7 +179,7 @@ class _analaticsState extends State<analatics> {
                   ),
                 ),
                 Text(
-                  "Average distance traveled in last 15 trips",
+                  "Average distance traveled in last ${tripCount.toString()} trips",
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey,
@@ -160,7 +192,7 @@ class _analaticsState extends State<analatics> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "34",
+                        avgCost.toString(),
                         style: TextStyle(
                             fontSize: 52, fontWeight: FontWeight.bold),
                       ),
@@ -174,7 +206,7 @@ class _analaticsState extends State<analatics> {
                   ),
                 ),
                 Text(
-                  "Average Cost in last 15 trips",
+                  "Average Cost in last ${tripCount.toString()} trips",
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey,
@@ -187,7 +219,7 @@ class _analaticsState extends State<analatics> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "20",
+                        avgSavings.toString(),
                         style: TextStyle(
                             fontSize: 52,
                             fontWeight: FontWeight.bold,
@@ -204,7 +236,7 @@ class _analaticsState extends State<analatics> {
                   ),
                 ),
                 Text(
-                  "Average Savings in last 15 trips",
+                  "Average Savings in last ${tripCount.toString()} trips",
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey,
