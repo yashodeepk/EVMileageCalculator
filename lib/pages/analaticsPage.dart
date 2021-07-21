@@ -37,7 +37,7 @@ class _analaticsState extends State<analatics> {
         logo = Currency.from(json: jsonDecode(selectcurrency));
       });
     } else {
-      logo.symbol = "Rs";
+      logo.symbol = '₹';
     }
   }
 
@@ -161,7 +161,7 @@ class _analaticsState extends State<analatics> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        avgDistance.toString(),
+                        avgDistance.toStringAsFixed(2),
                         style: TextStyle(
                             fontSize: 52,
                             color: Colors.amber,
@@ -191,7 +191,7 @@ class _analaticsState extends State<analatics> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        avgCost.toString(),
+                        avgCost.toStringAsFixed(2),
                         style: TextStyle(
                             fontSize: 52, fontWeight: FontWeight.bold),
                       ),
@@ -218,7 +218,7 @@ class _analaticsState extends State<analatics> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        avgSavings.toString(),
+                        avgSavings.toStringAsFixed(2),
                         style: TextStyle(
                             fontSize: 52,
                             fontWeight: FontWeight.bold,
