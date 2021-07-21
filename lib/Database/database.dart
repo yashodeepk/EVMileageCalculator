@@ -11,6 +11,7 @@ var petrolPrize;
 var petrolVehicalMileage;
 var selectcurrency;
 var totalDistance;
+var distanceUnit;
 
 class DB {
   Future<Database> initDB() async {
