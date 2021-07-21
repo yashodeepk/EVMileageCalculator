@@ -7,7 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:mileagecalculator/Database/database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../main.dart';
+
 class WelcomePageWidget extends StatefulWidget {
+  dynamic fromMainPage;
+  WelcomePageWidget({this.fromMainPage});
   @override
   _WelcomePageWidgetState createState() => _WelcomePageWidgetState();
 }
@@ -21,7 +25,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   String select = "Select";
   var logo;
-
+  String dropdownValue = "Km";
   void getSPData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -80,12 +84,16 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
+        leading: !widget.fromMainPage
+            ? IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  if (!widget.fromMainPage) {
+                    Navigator.of(context).pop();
+                  }
+                },
+              )
+            : Container(),
         elevation: 0,
         backgroundColor: Color(0xFF22262B),
         automaticallyImplyLeading: false,
@@ -118,13 +126,136 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                   Container(
                     padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Container(
                           width: MediaQuery.of(context).size.width / 2,
                           child: Center(
                             child: Text(
-                              'Battery Capacity',
+                              'Select currency',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                            width: MediaQuery.of(context).size.width / 2,
+                            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                            child: Center(
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                decoration: BoxDecoration(
+                                    color: Color(0xff03adc6).withOpacity(0.7),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(24))),
+                                child: TextButton(
+                                  onPressed: () {
+                                    showCurrencyPicker(
+                                      context: context,
+                                      showFlag: true,
+                                      showCurrencyName: true,
+                                      showCurrencyCode: true,
+                                      onSelect: (Currency currency) {
+                                        setState(() {
+                                          select = currency.name +
+                                              " " +
+                                              currency.symbol;
+
+                                          logo = currency;
+                                        });
+                                        print(
+                                            'Select currency: ${currency.name}');
+                                      },
+                                      favorite: ['INR'],
+                                    );
+                                  },
+                                  child: Center(
+                                    child: AutoSizeText(
+                                      select,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: Center(
+                            child: Text(
+                              'Select Distance unit',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                            width: MediaQuery.of(context).size.width / 2,
+                            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                            child: Center(
+                              child: Container(
+                                width: MediaQuery.of(context).size.width / 2,
+                                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                decoration: BoxDecoration(
+                                    color: Color(0xff03adc6).withOpacity(0.7),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(24))),
+                                child: Center(
+                                  child: DropdownButton<String>(
+                                    value: dropdownValue,
+                                    icon: const Icon(Icons.arrow_downward),
+                                    iconSize: 24,
+                                    elevation: 16,
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 18),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        dropdownValue = newValue!;
+                                      });
+                                    },
+                                    items: <String>['Km', 'Miles']
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: Center(
+                            child: Text(
+                              'EV Mileage',
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 color: Colors.white,
@@ -144,7 +275,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                             controller: batteryCapacityController,
                             obscureText: false,
                             decoration: InputDecoration(
-                              hintText: 'kWh',
+                              hintText: 'Km',
                               hintStyle: TextStyle(
                                 color: Colors.white,
                                 fontSize: 17,
@@ -402,71 +533,6 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                       ],
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: Center(
-                            child: Text(
-                              'Select currency',
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                            width: MediaQuery.of(context).size.width / 2,
-                            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: Center(
-                              child: Container(
-                                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                decoration: BoxDecoration(
-                                    color: Color(0xff03adc6).withOpacity(0.7),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(24))),
-                                child: TextButton(
-                                  onPressed: () {
-                                    showCurrencyPicker(
-                                      context: context,
-                                      showFlag: true,
-                                      showCurrencyName: true,
-                                      showCurrencyCode: true,
-                                      onSelect: (Currency currency) {
-                                        setState(() {
-                                          select = currency.name +
-                                              " " +
-                                              currency.symbol;
-
-                                          logo = currency;
-                                        });
-                                        print(
-                                            'Select currency: ${currency.name}');
-                                      },
-                                      favorite: ['INR'],
-                                    );
-                                  },
-                                  child: Center(
-                                    child: AutoSizeText(
-                                      select,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )),
-                      ],
-                    ),
-                  ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                     child: Container(
@@ -478,7 +544,15 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                         onPressed: () {
                           setDatatoSP();
                           print("set prefrence");
-                          Navigator.of(context).pop();
+                          if (!widget.fromMainPage) {
+                            Navigator.of(context).pop();
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MyHomePage()),
+                            );
+                          }
                         },
                         icon: Icon(
                           Icons.save_alt_rounded,

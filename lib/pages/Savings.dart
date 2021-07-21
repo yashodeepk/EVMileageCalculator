@@ -182,7 +182,10 @@ class _CompareWidgetState extends State<CompareWidget> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => WelcomePageWidget()),
+            MaterialPageRoute(
+                builder: (context) => WelcomePageWidget(
+                      fromMainPage: false,
+                    )),
           );
         },
         backgroundColor: Color(0xFF03ADC6),

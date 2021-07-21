@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mileagecalculator/pages/Homepage.dart';
 import 'package:mileagecalculator/pages/Savings.dart';
+import 'package:mileagecalculator/pages/WelcomePage.dart';
 import 'package:mileagecalculator/pages/datapage.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,7 +35,11 @@ class MyApp extends StatelessWidget {
       home: SplashScreen.navigate(
         backgroundColor: Color(0xFF000000),
         name: 'assets/animation.riv',
-        next: (context) => MyHomePage(),
+        next: (context) => petrolPrize == null
+            ? WelcomePageWidget(
+                fromMainPage: true,
+              )
+            : MyHomePage(),
         startAnimation: 'ok',
         isLoading: false,
       ),
