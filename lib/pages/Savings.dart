@@ -75,7 +75,7 @@ class _CompareWidgetState extends State<CompareWidget> {
                                   ),
                                 ),
                                 child: Center(
-                                  child: Text('₹40,000',
+                                  child: Text(selectcurrency.symbol + '40,000',
                                       style: GoogleFonts.getFont(
                                         'Poppins',
                                         fontSize: 24,
@@ -127,7 +127,9 @@ class _CompareWidgetState extends State<CompareWidget> {
                                 ),
                                 //SizedBox(width: 30),
                                 AutoSizeText(
-                                  "EV  ₹" + trip.electricity.toString(),
+                                  "EV  " +
+                                      selectcurrency.symbol +
+                                      trip.electricity.toString(),
                                   style: GoogleFonts.getFont(
                                     'Poppins',
                                     fontSize: 16,
@@ -137,7 +139,9 @@ class _CompareWidgetState extends State<CompareWidget> {
                                 ),
                                 //SizedBox(width: 30),
                                 AutoSizeText(
-                                  "Petrol  ₹" + trip.petrol.toString(),
+                                  "Petrol  " +
+                                      selectcurrency.symbol +
+                                      trip.petrol.toString(),
                                   style: GoogleFonts.getFont(
                                     'Poppins',
                                     fontSize: 16,

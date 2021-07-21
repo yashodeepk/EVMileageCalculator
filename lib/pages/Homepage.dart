@@ -196,7 +196,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           style: TextStyle(fontSize: 72),
                         ),
                         Text(
-                          "KM",
+                          distanceUnit,
                           style: TextStyle(fontSize: 20),
                         ),
                         SizedBox(

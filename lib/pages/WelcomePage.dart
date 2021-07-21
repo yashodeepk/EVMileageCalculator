@@ -61,6 +61,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
         dropdownValue = distanceUnit;
       });
     }
+
     if (selectcurrency != null) {
       setState(() {
         logo = Currency.from(json: jsonDecode(selectcurrency));
@@ -296,7 +297,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               controller: batteryCapacityController,
                               obscureText: false,
                               decoration: InputDecoration(
-                                hintText: 'Km',
+                                hintText: dropdownValue.toString(),
                                 hintStyle: TextStyle(
                                   color: Colors.white,
                                   fontSize: 17,
@@ -374,7 +375,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               controller: electricityPriceController,
                               obscureText: false,
                               decoration: InputDecoration(
-                                hintText: '₹',
+                                hintText: logo != null ? logo.symbol : '₹',
                                 hintStyle: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
@@ -452,7 +453,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               controller: petrolPrizeController,
                               obscureText: false,
                               decoration: InputDecoration(
-                                hintText: '₹',
+                                hintText: logo != null ? logo.symbol : '₹',
                                 hintStyle: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
@@ -530,7 +531,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               controller: petrolVehicalMileageController,
                               obscureText: false,
                               decoration: InputDecoration(
-                                hintText: 'Km/Ltr',
+                                hintText: dropdownValue.toString() + '/Ltr',
                                 hintStyle: TextStyle(
                                   color: Colors.white,
                                   fontSize: 17,
@@ -600,7 +601,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                     .showSnackBar(SnackBar(
                                   behavior: SnackBarBehavior.floating,
                                   content: Text(
-                                    "Please write Curreny",
+                                    "Please select Curreny",
                                     style: TextStyle(color: Colors.white),
                                   ),
                                   duration: Duration(seconds: 2),
