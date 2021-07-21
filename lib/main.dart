@@ -20,7 +20,7 @@ Future<void> main() async {
   petrolPrize = prefs.getString('petrol_Prize');
   petrolVehicalMileage = prefs.getString('petrol_Vehical_Mileage');
   selectcurrency = prefs.getString('select_currency');
-
+  distanceUnit = prefs.getString('distanceUnit');
   runApp(MyApp());
 }
 
