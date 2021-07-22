@@ -80,18 +80,24 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('battery_Capacity', batteryCapacityController.text);
     print("Battery is " + batteryCapacityController.text);
+    batteryCapacity = batteryCapacityController.text;
     prefs.setString('electricity_Price', electricityPriceController.text);
     print("Electricity Price " + electricityPriceController.text);
+    electricityPrice = electricityPriceController.text;
     prefs.setString('petrol_Prize', petrolPrizeController.text);
     print('Petrol Prize ' + petrolPrizeController.text);
+    petrolPrize = petrolPrizeController.text;
     prefs.setString(
         'petrol_Vehical_Mileage', petrolVehicalMileageController.text);
     print('Pertrol Mileage' + petrolVehicalMileageController.text);
+    petrolVehicalMileage = petrolVehicalMileageController.text;
     prefs.setString('distanceUnit', dropdownValue);
-    print('Distance Unit is ' + distanceUnit);
+    print('Distance Unit is ' + dropdownValue);
     String user = jsonEncode(logo);
     prefs.setString('select_currency', user);
     print('Currency ' + user);
+    distanceUnit = dropdownValue;
+    selectcurrency = user;
   }
 
   @override

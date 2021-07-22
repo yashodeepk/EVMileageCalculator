@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mileagecalculator/Database/database.dart';
 import 'package:mileagecalculator/Database/datamodel.dart';
@@ -35,13 +38,12 @@ class _CompareWidgetState extends State<CompareWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Container(),
         elevation: 0,
         backgroundColor: Color(0xFF22262B),
-        title: Center(
-          child: Text(
-            "Savings",
-            style: TextStyle(fontSize: 24),
-          ),
+        title: Text(
+          "Savings",
+          style: TextStyle(fontSize: 24),
         ),
       ),
       backgroundColor: Color(0xFF22262B),
@@ -75,7 +77,12 @@ class _CompareWidgetState extends State<CompareWidget> {
                                   ),
                                 ),
                                 child: Center(
-                                  child: Text(selectcurrency.symbol + '40,000',
+                                  child: Text(
+                                      Currency.from(
+                                                  json: jsonDecode(
+                                                      selectcurrency))
+                                              .symbol +
+                                          '40,000',
                                       style: GoogleFonts.getFont(
                                         'Poppins',
                                         fontSize: 24,
