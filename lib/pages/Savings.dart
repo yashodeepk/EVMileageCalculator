@@ -135,7 +135,9 @@ class _CompareWidgetState extends State<CompareWidget> {
                                 //SizedBox(width: 30),
                                 AutoSizeText(
                                   "EV  " +
-                                      selectcurrency.symbol +
+                                      Currency.from(
+                                              json: jsonDecode(selectcurrency))
+                                          .symbol +
                                       trip.electricity.toString(),
                                   style: GoogleFonts.getFont(
                                     'Poppins',
@@ -147,7 +149,9 @@ class _CompareWidgetState extends State<CompareWidget> {
                                 //SizedBox(width: 30),
                                 AutoSizeText(
                                   "Petrol  " +
-                                      selectcurrency.symbol +
+                                      Currency.from(
+                                              json: jsonDecode(selectcurrency))
+                                          .symbol +
                                       trip.petrol.toString(),
                                   style: GoogleFonts.getFont(
                                     'Poppins',
