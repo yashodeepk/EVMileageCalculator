@@ -73,13 +73,15 @@ class _analaticsState extends State<analatics> {
 
       setState(() {
         tripCount = length;
-        print("tripcount is " + tripCount.toString());
-        avgCost = double.parse((avgCost / tripCount).toString());
-        print("Avg Cost is " + avgCost.toString());
-        avgSavings = double.parse((avgSavings / tripCount).toString());
-        print("Avg Savings is " + avgSavings.toString());
-        avgDistance = double.parse((avgDistance / tripCount).toString());
-        print("Avg Savings is " + avgDistance.toString());
+        if (tripCount != 0) {
+          print("tripcount is " + tripCount.toString());
+          avgCost = double.parse((avgCost / tripCount).toString());
+          print("Avg Cost is " + avgCost.toString());
+          avgSavings = double.parse((avgSavings / tripCount).toString());
+          print("Avg Savings is " + avgSavings.toString());
+          avgDistance = double.parse((avgDistance / tripCount).toString());
+          print("Avg Savings is " + avgDistance.toString());
+        }
       });
       return arrSpots;
     } else {
@@ -168,7 +170,7 @@ class _analaticsState extends State<analatics> {
                             fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        " km",
+                        " " + distanceUnit,
                         style: TextStyle(
                           color: Colors.amber,
                           fontSize: 18,
@@ -273,7 +275,7 @@ class _analaticsState extends State<analatics> {
                     ),
                   ),
                   TextSpan(
-                    text: ' km ',
+                    text: ' ' + distanceUnit + ' ',
                     style: TextStyle(
                       fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.normal,
