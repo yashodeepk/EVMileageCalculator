@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mileagecalculator/Database/datamodel.dart';
 import 'package:mileagecalculator/pages/responsive.dart';
 import 'package:mileagecalculator/Database/database.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
+import 'package:geolocator/geolocator.dart';
 
 class HomePageWidget extends StatefulWidget {
   @override
@@ -23,33 +24,117 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   bool fetching = true;
   bool bottomdialoag = true;
   late int distance;
+  double? distancefind = 0.00;
   late int charging;
   late int statrtdistance;
   late int enddistance;
   late int statrtCharging;
   late int endCharging;
+  late LocationPermission permission;
+  late bool serviceEnabled;
+  bool start = false;
   late DB db;
+  bool icon = false;
+  late double startlatitude;
+  late double startlongitude;
+
+  StreamSubscription<Position>? _positionStreamSubscription;
+  final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
+
+  Future<void> _toggleListening() async {
+    print("In Function");
+    if (_positionStreamSubscription == null) {
+      print("In Function if");
+      //final positionStream = _geolocatorPlatform.getPositionStream();
+      // Position? start = await Geolocator.getLastKnownPosition();
+
+      _positionStreamSubscription = Geolocator.getPositionStream(
+              forceAndroidLocationManager: true,
+              desiredAccuracy: LocationAccuracy.high)
+          .listen((Position position) async {
+        //Position start = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        print("Speed is " + position.speed.toString());
+        if (position.speed > 1.3) {
+          if (start) {
+            start = false;
+            print("Start");
+            startlatitude = position.latitude;
+            startlongitude = position.longitude;
+          } else {
+            distancefind = distancefind! +
+                Geolocator.distanceBetween(startlatitude, startlongitude,
+                    position.latitude, position.longitude);
+            startlatitude = position.latitude;
+            startlongitude = position.longitude;
+          }
+        }
+
+        print("Distance is " + distancefind.toString());
+        print("Start " +
+            // start.latitude.toString() +
+            // ", " +
+            // start.longitude.toString() +
+            "end " +
+            position.latitude.toString() +
+            ', ok ' +
+            position.longitude.toString());
+      });
+    }
+
+    if (_positionStreamSubscription == null) {
+      return;
+    }
+
+    setState(() {
+      if (_positionStreamSubscription!.isPaused) {
+        icon = true;
+        _positionStreamSubscription!.resume();
+      } else {
+        icon = false;
+        _positionStreamSubscription!.pause();
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    //print("data length " + datas.length.toString());
-    if (trip_name != null) {
-      setState(() {
-        titleController.text = trip_name;
-      });
+    _determinePosition();
+  }
+
+  Future<Position> _determinePosition() async {
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      //Alert Box
+      //On Location
+      await Geolocator.openLocationSettings();
+      return Future.error('Location services are disabled.');
     }
-    if (start_km != null) {
-      setState(() {
-        startkmController.text = start_km;
-      });
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        //Alert Box
+        //Give Access
+        await Geolocator.openAppSettings();
+        return Future.error('Location permissions are denied');
+      }
     }
-    if (start_charge_percentage != null) {
-      setState(() {
-        startchargingController.text = start_charge_percentage;
-      });
+
+    if (permission == LocationPermission.deniedForever) {
+      //Alert Box
+      //Give Access
+      await Geolocator.openAppSettings();
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
     }
-    db = DB();
-    getdata();
+    return await Geolocator.getCurrentPosition();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   void setDatatoSP() async {
@@ -64,15 +149,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     await prefs.remove('trip_name');
     await prefs.remove('start_km');
     await prefs.remove('start_charge_percentage');
-  }
-
-  void getdata() async {
-    data = db.getData();
-    datas = await db.getData();
-    datas = datas.reversed.toList();
-    setState(() {
-      fetching = false;
-    });
   }
 
   @override
@@ -91,634 +167,50 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           ),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        child: icon ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+        onPressed: () {
+          print("Pressed");
+          start = true;
+          _toggleListening();
+        },
+      ),
       backgroundColor: Color(0xFF22262B),
       body: SafeArea(
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          child: SingleChildScrollView(
+          child: Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: [
                 Container(
-                  padding: EdgeInsets.fromLTRB(25, 0, 20, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton.icon(
-                        style: TextButton.styleFrom(
-                          primary: Color(0xFF03DAC6),
+                  padding: EdgeInsets.all(10),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Text(
+                          "13.0",
+                          style: TextStyle(fontSize: 72),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            titleController.text = "";
-                            startchargingController.text = "";
-                            startkmController.text = "";
-                            endkmController.text = "";
-                            endchargingController.text = "";
-                            removeDatatoSP();
-                          });
-                        },
-                        icon: Icon(Icons.clear_all),
-                        label: Text("Clear All"),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: TextFormField(
-                          controller: titleController,
-                          inputFormatters: [
-                            LengthLimitingTextInputFormatter(10),
-                          ],
-                          //maxLength: 10,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            hintText: 'Trip Name',
-                            hintStyle: GoogleFonts.getFont(
-                              'Poppins',
-                              color: Color(0xFFD7D6D5),
-                              fontSize: 20,
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.transparent,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(20),
-                                bottomRight: Radius.circular(20),
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20),
-                              ),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.transparent,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(20),
-                                bottomRight: Radius.circular(20),
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20),
-                              ),
-                            ),
-                            filled: true,
-                            fillColor: Color(0xFF43464C),
-                          ),
+                        Text(
+                          distanceUnit,
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Walking",
                           style: TextStyle(
-                            color: Color(0xFFFFFFFF),
-                            fontSize: 25,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                        child: Text(
-                          'Start',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment(0, 0),
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: TextFormField(
-                              controller: startkmController,
-                              keyboardType: TextInputType.number,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                hintText: 'Km',
-                                hintStyle: GoogleFonts.getFont(
-                                  'Poppins',
-                                  color: Color(0xFFD7D6D5),
-                                  fontSize: 16,
-                                ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.transparent,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20),
-                                    bottomRight: Radius.circular(20),
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                  ),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.transparent,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20),
-                                    bottomRight: Radius.circular(20),
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                  ),
-                                ),
-                                filled: true,
-                                fillColor: Color(0xFF43464C),
-                              ),
-                              style: TextStyle(
-                                color: Color(0xFFD7D6D5),
-                                fontSize: 20,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                          child: TextFormField(
-                            controller: startchargingController,
-                            keyboardType: TextInputType.number,
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              hintText: 'Charge %',
-                              hintStyle: GoogleFonts.getFont(
-                                'Poppins',
-                                color: Color(0xFFD7D6D5),
-                                fontSize: 16,
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(20),
-                                  bottomRight: Radius.circular(20),
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20),
-                                ),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(20),
-                                  bottomRight: Radius.circular(20),
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20),
-                                ),
-                              ),
-                              filled: true,
-                              fillColor: Color(0xFF43464C),
-                            ),
-                            style: TextStyle(
-                              color: Color(0xFFD7D6D5),
-                              fontSize: 20,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                        child: Text(
-                          'Stop',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment(0, 0),
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: TextFormField(
-                              //cursorHeight: 10,
-                              controller: endkmController,
-                              keyboardType: TextInputType.number,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                hintText: 'Km',
-                                hintStyle: GoogleFonts.getFont(
-                                  'Poppins',
-                                  color: Color(0xFFD7D6D5),
-                                  fontSize: 16,
-                                ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.transparent,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20),
-                                    bottomRight: Radius.circular(20),
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                  ),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.transparent,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20),
-                                    bottomRight: Radius.circular(20),
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                  ),
-                                ),
-                                filled: true,
-                                fillColor: Color(0xFF43464C),
-                              ),
-                              style: TextStyle(
-                                color: Color(0xFFD7D6D5),
-                                fontSize: 20,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                          child: TextFormField(
-                            controller: endchargingController,
-                            keyboardType: TextInputType.number,
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              hintText: 'Charge %',
-                              hintStyle: GoogleFonts.getFont(
-                                'Poppins',
-                                color: Color(0xFFD7D6D5),
-                                fontSize: 16,
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(20),
-                                  bottomRight: Radius.circular(20),
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20),
-                                ),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(20),
-                                  bottomRight: Radius.circular(20),
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20),
-                                ),
-                              ),
-                              filled: true,
-                              fillColor: Color(0xFF43464C),
-                            ),
-                            style: TextStyle(
-                              color: Color(0xFFD7D6D5),
-                              fontSize: 18,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //mainAxisSize: MainAxisSize.,
-                  children: [
-                    // TextButton(
-                    //   child: Container(
-                    //     decoration: BoxDecoration(
-                    //       color: Color(0xFF8CEED2),
-                    //       borderRadius: BorderRadius.only(
-                    //         bottomLeft: Radius.circular(20),
-                    //         bottomRight: Radius.circular(20),
-                    //         topLeft: Radius.circular(20),
-                    //         topRight: Radius.circular(20),
-                    //       ),
-                    //     ),
-                    //     child: Center(
-                    //       child: Text(
-                    //         'Clear',
-                    //         style: GoogleFonts.getFont(
-                    //           'Poppins',
-                    //           fontSize: 16,
-                    //           color: Color(0xFF22262B),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     height: 45,
-                    //     width: 80,
-                    //   ),
-                    //   onPressed: () {
-                    //     // statrtdistance =
-                    //     //     int.parse(startkmController.text);
-                    //     // enddistance = int.parse(endkmController.text);
-                    //     // distance = enddistance - statrtdistance;
-                    //     // statrtCharging =
-                    //     //     int.parse(startchargingController.text);
-                    //     // endCharging =
-                    //     //     int.parse(endchargingController.text);
-                    //     // charging = statrtCharging - endCharging;
-                    //     // var patrolcost = 32;
-                    //     // var electricitycost = 7;
-                    //     // print(distance);
-                    //     // db.insertData(DataModel(
-                    //     //     title: titleController.text,
-                    //     //     distance: distance.toString(),
-                    //     //     savecharging: charging.toString(),
-                    //     //     dateTimeadd: datetime,
-                    //     //     petrol: patrolcost.toString(),
-                    //     //     electricity: electricitycost.toString()));
-                    //     print('IconButton pressed ...');
-                    //   },
-                    // ),
-                    TextButton(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xFF03ADC6).withOpacity(0.5),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'End Trip',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        height: 45,
-                        width: 120,
-                      ),
-                      onPressed: () {
-                        try {
-                          statrtdistance = int.parse(startkmController.text);
-                          enddistance = int.parse(endkmController.text);
-                          distance = enddistance - statrtdistance;
-                          statrtCharging =
-                              int.parse(startchargingController.text);
-                          endCharging = int.parse(endchargingController.text);
-                          charging = statrtCharging - endCharging;
-                          var patrolcost = 32; //Need Calculations
-                          var electricitycost = 7; //Need calculations
-                          print(distance);
-                          if (distance > 0 && charging > 0) {
-                            db.insertData(DataModel(
-                                title: titleController.text,
-                                distance: distance.toString(),
-                                savecharging: charging.toString(),
-                                dateTimeadd: DateFormat('d/M/y hh:mm a')
-                                    .format(DateTime.now()),
-                                petrol: patrolcost.toString(),
-                                electricity: electricitycost.toString()));
-                            getdata();
-                            removeDatatoSP();
-                            for (int i = 0; i <= datas.length; i++) {
-                              print(i);
-                            }
-                            print(datas.length);
-                            setState(() {
-                              titleController.text = "";
-                              startchargingController.text = "";
-                              startkmController.text = "";
-                              endkmController.text = "";
-                              endchargingController.text = "";
-                            });
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              behavior: SnackBarBehavior.floating,
-                              content: Text(
-                                "Oops! Data doesn't seems right..",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              duration: Duration(seconds: 2),
-                              backgroundColor: Color(0xFF03ADC6),
-                              margin: EdgeInsets.fromLTRB(20.0, 0, 20.0, 60.0),
-                              action: SnackBarAction(
-                                label: 'CLOSE',
-                                textColor: Colors.white,
-                                onPressed: ScaffoldMessenger.of(context)
-                                    .hideCurrentSnackBar,
-                              ),
-                            ));
-                          }
-                          print('IconButton pressed ...');
-                        } on Exception catch (_) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            behavior: SnackBarBehavior.floating,
-                            content: Text(
-                              "Oops! Data doesn't seems right..",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            duration: Duration(seconds: 2),
-                            backgroundColor: Color(0xFF03ADC6),
-                            margin: EdgeInsets.fromLTRB(20.0, 0, 20.0, 60.0),
-                            action: SnackBarAction(
-                              label: 'CLOSE',
-                              textColor: Colors.white,
-                              onPressed: ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar,
-                            ),
-                          ));
-                        }
-                      },
+                              fontSize: 24, fontStyle: FontStyle.italic),
+                        )
+                      ],
                     ),
-                    TextButton(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xFF03ADC6).withOpacity(0.5),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Start Trip',
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                          ),
-                        ),
-                        height: 45,
-                        width: 120,
-                      ),
-                      onPressed: () {
-                        setDatatoSP();
-                        print('IconButton pressed ...');
-                      },
-                    ),
-                  ],
-                ),
-                Container(
-                  //color: Color(0xFFD7D6D5),
-                  padding: EdgeInsets.fromLTRB(15, 10, 5, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Title",
-                        style: GoogleFonts.getFont(
-                          'Poppins',
-                          fontSize: 18,
-                          color: Color(0xFF03ADC6),
-                        ),
-                      ),
-                      Text(
-                        "Distance",
-                        style: GoogleFonts.getFont(
-                          'Poppins',
-                          fontSize: 18,
-                          color: Color(0xFF03ADC6),
-                        ),
-                      ),
-                      Text(
-                        "Charge",
-                        style: GoogleFonts.getFont(
-                          'Poppins',
-                          fontSize: 18,
-                          color: Color(0xFF03ADC6),
-                        ),
-                      ),
-                    ],
                   ),
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 2,
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                    child: FutureBuilder<List<DataModel>>(
-                        future: data,
-                        builder: (context, snapshot) {
-                          return ListView(
-                            //shrinkWrap: true,
-                            children: datas.map((trip) {
-                              return Container(
-                                padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                        color: Colors.grey,
-                                        style: BorderStyle.solid,
-                                        width: 2),
-                                  ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text(
-                                          trip.title!,
-                                          style: GoogleFonts.getFont(
-                                            'Poppins',
-                                            fontSize: 16,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        //SizedBox(width: 40),
-                                        Text(
-                                          trip.distance.toString() + " KM",
-                                          style: GoogleFonts.getFont(
-                                            'Poppins',
-                                            fontSize: 16,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        //SizedBox(width: 40),
-                                        Text(
-                                          trip.savecharging.toString() +
-                                              "% used",
-                                          style: GoogleFonts.getFont(
-                                            'Poppins',
-                                            fontSize: 16,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text(
-                                          "Date Time - " +
-                                              trip.dateTimeadd.toString(),
-                                          style: GoogleFonts.getFont(
-                                            'Poppins',
-                                          ),
-                                        ),
-                                        //SizedBox(width: 40),
-                                        IconButton(
-                                            icon: Icon(Icons.delete),
-                                            color: Colors.white,
-                                            onPressed: () {
-                                              setState(() {
-                                                print("Trip ID is " +
-                                                    trip.id.toString());
-                                                db.delete(trip.id ?? 0);
-                                                getdata();
-                                              });
-                                            }),
-                                        //SizedBox(width: 1),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
-                          );
-                        }),
-                  ),
-                )
               ],
             ),
           ),

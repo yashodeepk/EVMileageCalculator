@@ -119,7 +119,9 @@ class _DataPageState extends State<DataPage> {
                                     ),
                                     //SizedBox(width: 40),
                                     Text(
-                                      trip.distance.toString() + " KM",
+                                      trip.distance.toString() +
+                                          " " +
+                                          distanceUnit,
                                       style: GoogleFonts.getFont(
                                         'Poppins',
                                         fontSize: 16,
