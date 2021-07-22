@@ -35,13 +35,18 @@ class _DataPageState extends State<DataPage> {
     return Scaffold(
       backgroundColor: Color(0xFF22262B),
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         elevation: 0,
         backgroundColor: Color(0xFF22262B),
-        title: Center(
-            child: Text(
+        title: Text(
           "Database",
           style: TextStyle(fontSize: 24),
-        )),
+        ),
       ),
       body: Stack(
         children: [
