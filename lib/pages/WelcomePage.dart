@@ -157,6 +157,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                             child: Center(
                               child: Tooltip(
                                 message: 'What is your currency?',
+                                showDuration: Duration(seconds: 3),
                                 child: Text(
                                   'Select currency',
                                   textAlign: TextAlign.start,
@@ -225,6 +226,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                             child: Center(
                               child: Tooltip(
                                 message: 'What is the Distance unit you use?',
+                                showDuration: Duration(seconds: 3),
                                 child: Text(
                                   'Select Distance unit',
                                   textAlign: TextAlign.start,
@@ -285,6 +287,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                             child: Center(
                               child: Tooltip(
                                 message: 'Range of your EV on 100% charge',
+                                showDuration: Duration(seconds: 3),
                                 child: Text(
                                   'EV Full Range',
                                   textAlign: TextAlign.start,
@@ -371,6 +374,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               child: Tooltip(
                                 message:
                                     'Unit price of electicity in your area',
+                                showDuration: Duration(seconds: 3),
                                 child: Text(
                                   'Electricity Unit Price',
                                   textAlign: TextAlign.start,
@@ -457,6 +461,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               child: Tooltip(
                                 message:
                                     'Per litre price of petrol in your area',
+                                showDuration: Duration(seconds: 3),
                                 child: Text(
                                   'Petrol Price',
                                   textAlign: TextAlign.start,
@@ -542,6 +547,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               child: Tooltip(
                                 message:
                                     'Distance covered by the petrol vehicle in 1 litre of petrol',
+                                showDuration: Duration(seconds: 3),
                                 child: AutoSizeText(
                                   'Petrol vehicle Mileage',
                                   maxLines: 1,
