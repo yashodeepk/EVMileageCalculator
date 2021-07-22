@@ -38,12 +38,13 @@ class _CompareWidgetState extends State<CompareWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Container(),
         elevation: 0,
         backgroundColor: Color(0xFF22262B),
-        title: Text(
-          "Savings",
-          style: TextStyle(fontSize: 24),
+        title: Center(
+          child: Text(
+            "Savings",
+            style: TextStyle(fontSize: 24),
+          ),
         ),
       ),
       backgroundColor: Color(0xFF22262B),
