@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:currency_picker/currency_picker.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mileagecalculator/Database/database.dart';
@@ -154,12 +155,15 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                           Container(
                             width: MediaQuery.of(context).size.width / 2,
                             child: Center(
-                              child: Text(
-                                'Select currency',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
+                              child: Tooltip(
+                                message: 'What is your currency?',
+                                child: Text(
+                                  'Select currency',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
                                 ),
                               ),
                             ),
@@ -219,12 +223,15 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                           Container(
                             width: MediaQuery.of(context).size.width / 2,
                             child: Center(
-                              child: Text(
-                                'Select Distance unit',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
+                              child: Tooltip(
+                                message: 'What is the Distance unit you use?',
+                                child: Text(
+                                  'Select Distance unit',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
                                 ),
                               ),
                             ),
@@ -276,12 +283,15 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                           Container(
                             width: MediaQuery.of(context).size.width / 2,
                             child: Center(
-                              child: Text(
-                                'EV Mileage',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17,
+                              child: Tooltip(
+                                message: 'Range of your EV on 100% charge',
+                                child: Text(
+                                  'EV Full Range',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                  ),
                                 ),
                               ),
                             ),
@@ -358,12 +368,16 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                           Container(
                             width: MediaQuery.of(context).size.width / 2,
                             child: Center(
-                              child: Text(
-                                'Electricity Price',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17,
+                              child: Tooltip(
+                                message:
+                                    'Unit price of electicity in your area',
+                                child: Text(
+                                  'Electricity Unit Price',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                  ),
                                 ),
                               ),
                             ),
@@ -440,12 +454,16 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                           Container(
                             width: MediaQuery.of(context).size.width / 2,
                             child: Center(
-                              child: Text(
-                                'Petrol Price',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17,
+                              child: Tooltip(
+                                message:
+                                    'Per litre price of petrol in your area',
+                                child: Text(
+                                  'Petrol Price',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                  ),
                                 ),
                               ),
                             ),
@@ -521,13 +539,17 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                           Container(
                             width: MediaQuery.of(context).size.width / 2,
                             child: Center(
-                              child: AutoSizeText(
-                                'Petrol Vehical Mileage',
-                                maxLines: 1,
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
+                              child: Tooltip(
+                                message:
+                                    'Distance covered by the petrol vehicle in 1 litre of petrol',
+                                child: AutoSizeText(
+                                  'Petrol vehicle Mileage',
+                                  maxLines: 1,
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
                                 ),
                               ),
                             ),
@@ -593,6 +615,17 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      child: Text(
+                        "Long press on label to know more",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                     Padding(
