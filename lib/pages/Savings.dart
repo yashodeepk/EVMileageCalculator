@@ -27,6 +27,10 @@ class _CompareWidgetState extends State<CompareWidget> {
     getdata();
   }
 
+  void reload() {
+    setState(() {});
+  }
+
   void getdata() async {
     datas = await db.getData();
     setState(() {
@@ -38,6 +42,12 @@ class _CompareWidgetState extends State<CompareWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        // leading: IconButton(
+        //   icon: Icon(Icons.hourglass_empty),
+        //   color: Color(0xFF22262B),
+        //   onPressed: () {},
+        // ),
         elevation: 0,
         backgroundColor: Color(0xFF22262B),
         title: Center(
@@ -201,6 +211,7 @@ class _CompareWidgetState extends State<CompareWidget> {
             MaterialPageRoute(
                 builder: (context) => WelcomePageWidget(
                       fromMainPage: false,
+                      reload: reload,
                     )),
           );
         },

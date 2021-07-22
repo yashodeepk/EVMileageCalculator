@@ -103,13 +103,20 @@ class _analaticsState extends State<analatics> {
     return Scaffold(
       backgroundColor: Color(0xFF22262B),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        // leading: IconButton(
+        //   icon: Icon(Icons.hourglass_empty),
+        //   color: Color(0xFF22262B),
+        //   onPressed: () {},
+        // ),
         elevation: 0,
         backgroundColor: Color(0xFF22262B),
         title: Center(
-            child: Text(
-          "Analytics",
-          style: TextStyle(fontSize: 24),
-        )),
+          child: Text(
+            "Analytics",
+            style: TextStyle(fontSize: 24),
+          ),
+        ),
       ),
       body: SafeArea(
         child: Container(

@@ -12,7 +12,8 @@ import '../main.dart';
 
 class WelcomePageWidget extends StatefulWidget {
   dynamic fromMainPage;
-  WelcomePageWidget({this.fromMainPage});
+  dynamic reload;
+  WelcomePageWidget({this.fromMainPage, this.reload});
   @override
   _WelcomePageWidgetState createState() => _WelcomePageWidgetState();
 }
@@ -649,6 +650,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                 setDatatoSP();
                                 print("set prefrence");
                                 if (!widget.fromMainPage) {
+                                  widget.reload();
                                   Navigator.of(context).pop();
                                 } else {
                                   Navigator.push(

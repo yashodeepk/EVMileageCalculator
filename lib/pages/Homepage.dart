@@ -50,7 +50,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   bool speedcheck = false;
   late double startlatitude;
   late double startlongitude;
-
+  double? batteryUsed = 0.00;
   StreamSubscription<Position>? _positionStreamSubscription;
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
 
@@ -67,29 +67,33 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               .listen((Position position) async {
         //Position start = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
         print("Speed is " + position.speed.toString());
-        if (position.speed > 5) {
-          speedCheck = "Traveling";
-          speedcheck = true;
-          if (start) {
-            start = false;
-            print("Start");
-            startlatitude = position.latitude;
-            startlongitude = position.longitude;
+        setState(() {
+          if (position.speed > 1.4) {
+            speedCheck = "Traveling";
+            speedcheck = true;
+            if (start) {
+              start = false;
+              print("Start");
+              startlatitude = position.latitude;
+              startlongitude = position.longitude;
+            } else {
+              print("in else");
+              distancefind = distancefind! +
+                  Geolocator.distanceBetween(startlatitude, startlongitude,
+                          position.latitude, position.longitude) /
+                      1000;
+              batteryUsed = batteryUsed! +
+                  (distancefind! / double.parse(batteryCapacity)) * 100;
+              startlatitude = position.latitude;
+              startlongitude = position.longitude;
+            }
+          } else if (position.speed > 0.3 && position.speed < 1.4) {
+            speedcheck = false;
+            speedCheck = "Walking";
           } else {
-            print("in else");
-            distancefind = distancefind! +
-                Geolocator.distanceBetween(startlatitude, startlongitude,
-                    position.latitude, position.longitude);
-            startlatitude = position.latitude;
-            startlongitude = position.longitude;
+            speedCheck = "Standing";
           }
-        } else if (position.speed > 2.5 && position.speed < 5) {
-          speedcheck = false;
-          speedCheck = "Walking";
-        } else {
-          speedCheck = "Standing";
-        }
-
+        });
         print("Distance is " + distancefind.toString());
         print("Start " +
             // start.latitude.toString() +
@@ -264,13 +268,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         // mainAxisAlignment: MainAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          icon
-              ? FloatingActionButton(
-                  backgroundColor: Colors.white.withOpacity(0.7),
-                  child: Icon(Icons.pause),
-                  onPressed: () {},
-                )
-              : Container(),
           SizedBox(
             width: 8,
           ),
@@ -427,7 +424,28 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [],
+                      children: [
+                        Text(
+                          batteryUsed!.toStringAsFixed(2),
+                          style: TextStyle(fontSize: 24),
+                        ),
+                        Text(
+                          "% Used",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        // Text(
+                        //   speedCheck,
+                        //   style: TextStyle(
+                        //       fontSize: 24, fontStyle: FontStyle.italic),
+                        // )
+                        Icon(LineIcons.batteryAlt2Full),
+                        SizedBox(
+                          width: 8,
+                        ),
+                      ],
                     ),
                   ),
                 ),
