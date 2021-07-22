@@ -294,6 +294,10 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                 if (value!.isEmpty) {
                                   return "Please enter your EVs Mileage";
                                 }
+                                final n = num.tryParse(value);
+                                if (n == null) {
+                                  return '"$value" is not a valid number';
+                                }
                                 return null;
                               },
                               keyboardType: TextInputType.number,
@@ -371,6 +375,10 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               validator: (String? value) {
                                 if (value!.isEmpty) {
                                   return "Please enter Electricity price";
+                                }
+                                final n = num.tryParse(value);
+                                if (n == null) {
+                                  return '"$value" is not a valid number';
                                 }
                                 return null;
                               },
@@ -450,6 +458,10 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                 if (value!.isEmpty) {
                                   return "Please enter Petrol Price";
                                 }
+                                final n = num.tryParse(value);
+                                if (n == null) {
+                                  return '"$value" is not a valid number';
+                                }
                                 return null;
                               },
                               keyboardType: TextInputType.number,
@@ -527,6 +539,10 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               validator: (String? value) {
                                 if (value!.isEmpty) {
                                   return "Please enter Petrol Vehical Mileage";
+                                }
+                                final n = num.tryParse(value);
+                                if (n == null) {
+                                  return '"$value" is not a valid number';
                                 }
                                 return null;
                               },
