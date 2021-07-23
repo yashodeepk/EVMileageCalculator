@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:io';
 import 'package:mileagecalculator/Database/datamodel.dart';
+import 'package:mileagecalculator/pages/infoPage.dart';
 import 'package:mileagecalculator/pages/responsive.dart';
 import 'package:mileagecalculator/Database/database.dart';
 import 'package:rive/rive.dart';
@@ -108,14 +108,17 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
     setState(() {
       if (_positionStreamSubscription == null) {
-        icon = true;
+        //icon = true;
+        print('inside _positionStreamSubscription == null');
         return;
       }
-      if (_positionStreamSubscription!.isPaused) {
+      if (_positionStreamSubscription!.isPaused || icon == false) {
         icon = true;
+        print('inside _positionStreamSubscription.isPaused');
         _positionStreamSubscription!.resume();
       } else {
-        icon = false;
+        // icon = false;
+        print('inside _positionStreamSubscription.resume');
         _positionStreamSubscription!.pause();
       }
     });
@@ -244,6 +247,84 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       ),
     ],
   );
+  AlertDialog name = AlertDialog(
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(32.0))),
+    title: Center(
+        child: Text(
+      "Enter Trip Name",
+      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+      textAlign: TextAlign.center,
+    )),
+    content: Container(
+      height: 50,
+      child: Center(
+        child: TextFormField(
+          validator: (String? value) {
+            if (value!.isEmpty) {
+              return "Please enter Trip Name";
+            }
+            return null;
+          },
+          keyboardType: TextInputType.number,
+          inputFormatters: [
+            LengthLimitingTextInputFormatter(3),
+          ],
+          obscureText: false,
+          decoration: InputDecoration(
+            hintText: 'Trip 1',
+            hintStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 17,
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.transparent,
+                width: 1,
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.transparent,
+                width: 1,
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            filled: true,
+            fillColor: Color(0xFF43464C),
+          ),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    ),
+    actions: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          SizedBox(
+            width: 15,
+          ),
+          TextButton(child: Text("Save"), onPressed: () {}),
+          TextButton(child: Text("cancel"), onPressed: () {}),
+        ],
+      ),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -251,16 +332,23 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     return Scaffold(
       appBar: AppBar(
         // leading: ,
+        centerTitle: true,
         elevation: 0,
         backgroundColor: Color(0xFF22262B),
         automaticallyImplyLeading: false,
-        title: Center(
-          child: Text(
-            "MileageCalculator",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 24),
-          ),
+        title: Text(
+          "MileageCalculator",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 20),
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => InfoPage()));
+              },
+              icon: Icon(LineIcons.infoCircle))
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Row(
@@ -273,7 +361,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           ),
           FloatingActionButton(
             backgroundColor: Color(0xFF03ADC6),
-            child: icon ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+            child: (_positionStreamSubscription == null ||
+                    _positionStreamSubscription!.isPaused)
+                ? Icon(Icons.play_arrow)
+                : Icon(Icons.pause),
             onPressed: () async {
               // print(serviceEnabled);
               permission = await Geolocator.checkPermission();
@@ -299,7 +390,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     'Location permissions are permanently denied, we cannot request permissions.');
               } else {
                 print("Pressed");
-                _pressInput?.value = true;
+                setState(() {
+                  _pressInput?.value = true;
+
+                  // icon = true;
+                });
                 start = true;
                 _toggleListening();
               }
