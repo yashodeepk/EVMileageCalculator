@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:mileagecalculator/Database/datamodel.dart';
 import 'package:mileagecalculator/pages/infoPage.dart';
 import 'package:mileagecalculator/pages/responsive.dart';
@@ -53,7 +54,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   late double startlatitude;
   late double startlongitude;
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
-
+  final _form = GlobalKey<FormState>();
   Future<void> _toggleListening() async {
     distancefind = 0.0;
     print("In Function");
@@ -140,7 +141,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     }
     setState(() {
       _bikeArtboard = artboard;
-      if (_positionStreamSubscription!.isPaused) {
+      if (_positionStreamSubscription == null ||
+          _positionStreamSubscription!.isPaused) {
         _pressInput?.value = false;
       } else {
         _pressInput?.value = true;
@@ -153,6 +155,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     super.initState();
     _bikeRiveFile();
     _determinePosition();
+    db = DB();
   }
 
   Future<Position> _determinePosition() async {
@@ -161,7 +164,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return alert;
+          return alert(context);
         },
       );
       //Alert Box
@@ -177,7 +180,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return alert;
+            return alert(context);
           },
         );
         //Alert Box
@@ -191,7 +194,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return alert;
+          return alert(context);
         },
       );
       //Alert Box
@@ -222,119 +225,153 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     await prefs.remove('start_charge_percentage');
   }
 
-  AlertDialog alert = AlertDialog(
-    shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(32.0))),
-    title: Center(
-        child: Text(
-      "Location Access Error",
-      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-      textAlign: TextAlign.center,
-    )),
-    content: Container(
-      height: 30,
-      child: Center(
-        child: Text(
-          "Please Give Location Access",
-          style: TextStyle(
-            color: Colors.white,
-          ),
+  AlertDialog alert(context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(32.0))),
+        title: Center(
+            child: Text(
+          "Location Access Error",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           textAlign: TextAlign.center,
+        )),
+        content: Container(
+          height: 30,
+          child: Center(
+            child: Text(
+              "Please Give Location Access",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
-      ),
-    ),
-    actions: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          TextButton(
-              child: Text("Get Access"),
-              onPressed: () async {
-                await Geolocator.openAppSettings();
-              }),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              TextButton(
+                  child: Text("Get Access"),
+                  onPressed: () async {
+                    await Geolocator.openAppSettings();
+                    Navigator.of(context).pop();
+                  }),
+            ],
+          ),
         ],
-      ),
-    ],
-  );
-  AlertDialog name = AlertDialog(
-    shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(32.0))),
-    title: Center(
-        child: Text(
-      "Enter Trip Name",
-      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-      textAlign: TextAlign.center,
-    )),
-    content: Container(
-      height: 50,
-      child: Center(
-        child: TextFormField(
-          validator: (String? value) {
-            if (value!.isEmpty) {
-              return "Please enter Trip Name";
-            }
-            return null;
-          },
-          keyboardType: TextInputType.number,
-          inputFormatters: [
-            LengthLimitingTextInputFormatter(3),
-          ],
-          obscureText: false,
-          decoration: InputDecoration(
-            hintText: 'Trip 1',
-            hintStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 17,
-            ),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.transparent,
-                width: 1,
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.transparent,
-                width: 1,
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            filled: true,
-            fillColor: Color(0xFF43464C),
-          ),
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-          ),
+      );
+  AlertDialog name(context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(32.0))),
+        title: Center(
+            child: Text(
+          "Enter Trip Name",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           textAlign: TextAlign.center,
-        ),
-      ),
-    ),
-    actions: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          SizedBox(
-            width: 15,
+        )),
+        content: Form(
+          key: _form,
+          child: Container(
+            height: 50,
+            child: Center(
+              child: TextFormField(
+                controller: titleController,
+                validator: (String? value) {
+                  if (value!.isEmpty) {
+                    return "Please enter Trip Name";
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(3),
+                ],
+                obscureText: false,
+                decoration: InputDecoration(
+                  hintText: 'Trip 1',
+                  hintStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  filled: true,
+                  fillColor: Color(0xFF43464C),
+                ),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
           ),
-          TextButton(child: Text("Save"), onPressed: () {}),
-          TextButton(child: Text("cancel"), onPressed: () {}),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: 15,
+              ),
+              TextButton(
+                  child: Text("Save"),
+                  onPressed: () {
+                    db.insertData(DataModel(
+                        title: titleController.text,
+                        dateTimeadd: DateFormat('d/M/y hh:mm a')
+                            .format(DateTime.now())
+                            .toString(),
+                        distance: distancefind.toString(),
+                        savecharging: batteryUsed.toString(),
+                        electricity: (double.parse(batteryCap) *
+                                (batteryUsed! / 100) *
+                                double.parse(electricityPrice))
+                            .toString(),
+                        petrol: ((distancefind! /
+                                    double.parse(petrolVehicalMileage)) *
+                                double.parse(petrolPrize))
+                            .toString()));
+                    setState(() {
+                      _pressInput?.value = false;
+                      distancefind = 0.0;
+                      batteryUsed = 0.00;
+                      icon = false;
+                      _positionStreamSubscription!.pause();
+                    });
+                    Navigator.of(context).pop();
+                  }),
+              TextButton(
+                  child: Text("cancel"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+            ],
+          ),
         ],
-      ),
-    ],
-  );
-
+      );
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -383,7 +420,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return alert;
+                      return alert(context);
                     },
                   );
                   return Future.error('Location permissions are denied');
@@ -392,7 +429,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return alert;
+                    return alert(context);
                   },
                 );
                 return Future.error(
@@ -415,12 +452,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   backgroundColor: Colors.red,
                   child: Icon(Icons.stop),
                   onPressed: () {
-                    setState(() {
-                      _pressInput?.value = false;
-                      distancefind = 0.0;
-                      icon = false;
-                      _positionStreamSubscription!.pause();
-                    });
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return name(context);
+                      },
+                    );
                   },
                 )
               : Container()
