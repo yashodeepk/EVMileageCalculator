@@ -28,6 +28,7 @@ class _CompareWidgetState extends State<CompareWidget> {
     super.initState();
     db = DB();
     getdata();
+    savings = 0.00;
   }
 
   void reload() {
@@ -103,7 +104,7 @@ class _CompareWidgetState extends State<CompareWidget> {
                                                   json: jsonDecode(
                                                       selectcurrency))
                                               .symbol +
-                                          savings.toString(),
+                                          savings.toStringAsFixed(3),
                                       style: GoogleFonts.getFont(
                                         'Poppins',
                                         fontSize: 24,
@@ -164,7 +165,8 @@ class _CompareWidgetState extends State<CompareWidget> {
                                       Currency.from(
                                               json: jsonDecode(selectcurrency))
                                           .symbol +
-                                      trip.electricity.toString(),
+                                      double.parse(trip.electricity.toString())
+                                          .toStringAsFixed(2),
                                   style: GoogleFonts.getFont(
                                     'Poppins',
                                     fontSize: 16,
@@ -178,7 +180,8 @@ class _CompareWidgetState extends State<CompareWidget> {
                                       Currency.from(
                                               json: jsonDecode(selectcurrency))
                                           .symbol +
-                                      trip.petrol.toString(),
+                                      double.parse(trip.petrol.toString())
+                                          .toStringAsFixed(2),
                                   style: GoogleFonts.getFont(
                                     'Poppins',
                                     fontSize: 16,
