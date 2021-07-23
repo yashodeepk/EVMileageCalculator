@@ -92,6 +92,7 @@ class _DataPageState extends State<DataPage> {
                     return ListView(
                       children: datas.map((trip) {
                         return Container(
+                          key: Key(trip.id.toString()),
                           margin: const EdgeInsets.only(bottom: 10),
                           decoration: BoxDecoration(
                             border: Border(
@@ -152,18 +153,18 @@ class _DataPageState extends State<DataPage> {
                                       ),
                                     ),
                                     //SizedBox(width: 40),
-                                    SizedBox(
-                                      height: 30,
-                                    ),
-                                    // IconButton(
-                                    //     icon: Icon(Icons.delete),
-                                    //     color: Colors.white,
-                                    //     onPressed: () {
-                                    //       setState(() {
-                                    //         db!.delete(trip.id ?? 0);
-                                    //         getdata();
-                                    //       });
-                                    //     }),
+                                    // SizedBox(
+                                    //   height: 30,
+                                    // ),
+                                    IconButton(
+                                        icon: Icon(Icons.delete),
+                                        color: Colors.white,
+                                        onPressed: () {
+                                          setState(() {
+                                            db!.delete(trip.id ?? 0);
+                                            getdata();
+                                          });
+                                        }),
                                     //SizedBox(width: 1),
                                   ],
                                 ),

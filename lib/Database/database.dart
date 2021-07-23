@@ -50,6 +50,6 @@ class DB {
 
   Future<int> delete(int id) async {
     final Database db = await initDB();
-    return await db.delete("TRIPTable", where: "id", whereArgs: [id]);
+    return await db.delete("TRIPTable", where: "id = ?", whereArgs: [id]);
   }
 }
