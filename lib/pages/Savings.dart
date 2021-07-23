@@ -21,6 +21,7 @@ class _CompareWidgetState extends State<CompareWidget> {
   List<DataModel> datas = [];
   bool fetching = true;
   late DB db;
+  var savings = 0.00;
 
   @override
   void initState() {
@@ -35,6 +36,7 @@ class _CompareWidgetState extends State<CompareWidget> {
 
   void getdata() async {
     datas = await db.getData();
+    datas = datas.reversed.toList();
     setState(() {
       fetching = false;
     });
@@ -101,7 +103,7 @@ class _CompareWidgetState extends State<CompareWidget> {
                                                   json: jsonDecode(
                                                       selectcurrency))
                                               .symbol +
-                                          '40,000',
+                                          savings.toString(),
                                       style: GoogleFonts.getFont(
                                         'Poppins',
                                         fontSize: 24,
@@ -124,6 +126,11 @@ class _CompareWidgetState extends State<CompareWidget> {
                 padding: EdgeInsets.fromLTRB(20, 150, 20, 10),
                 child: ListView(
                   children: datas.map((trip) {
+                    setState(() {
+                      savings = savings +
+                          (double.parse(trip.petrol.toString()) -
+                              double.parse(trip.electricity.toString()));
+                    });
                     return Container(
                       margin: const EdgeInsets.only(bottom: 10),
                       decoration: BoxDecoration(
@@ -190,15 +197,18 @@ class _CompareWidgetState extends State<CompareWidget> {
                                     'Poppins',
                                   ),
                                 ),
-                                IconButton(
-                                    icon: Icon(Icons.delete),
-                                    color: Colors.white,
-                                    onPressed: () {
-                                      setState(() {
-                                        db.delete(trip.id ?? 0);
-                                        getdata();
-                                      });
-                                    }),
+                                SizedBox(
+                                  height: 30,
+                                )
+                                // IconButton(
+                                //     icon: Icon(Icons.delete),
+                                //     color: Colors.white,
+                                //     onPressed: () {
+                                //       setState(() {
+                                //         db.delete(trip.id ?? 0);
+                                //         getdata();
+                                //       });
+                                //     }),
                               ],
                             ),
                           ],

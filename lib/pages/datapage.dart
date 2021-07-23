@@ -25,6 +25,7 @@ class _DataPageState extends State<DataPage> {
   void getdata() async {
     data = db!.getData();
     datas = await db!.getData();
+    datas = datas.reversed.toList();
     setState(() {
       fetching = false;
     });
@@ -151,15 +152,18 @@ class _DataPageState extends State<DataPage> {
                                       ),
                                     ),
                                     //SizedBox(width: 40),
-                                    IconButton(
-                                        icon: Icon(Icons.delete),
-                                        color: Colors.white,
-                                        onPressed: () {
-                                          setState(() {
-                                            db!.delete(trip.id ?? 0);
-                                            getdata();
-                                          });
-                                        }),
+                                    SizedBox(
+                                      height: 30,
+                                    ),
+                                    // IconButton(
+                                    //     icon: Icon(Icons.delete),
+                                    //     color: Colors.white,
+                                    //     onPressed: () {
+                                    //       setState(() {
+                                    //         db!.delete(trip.id ?? 0);
+                                    //         getdata();
+                                    //       });
+                                    //     }),
                                     //SizedBox(width: 1),
                                   ],
                                 ),

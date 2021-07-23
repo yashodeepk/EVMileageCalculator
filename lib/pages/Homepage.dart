@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 bool? icon = false;
 bool start = false;
@@ -23,6 +24,37 @@ StreamSubscription<Position>? _positionStreamSubscription;
 class HomePageWidget extends StatefulWidget {
   @override
   _HomePageWidgetState createState() => _HomePageWidgetState();
+}
+
+// The callback function should always be a top-level function.
+void callback() {
+  int updateCount = 0;
+
+  FlutterForegroundTask.initDispatcher((timestamp) async {
+    final strTimestamp = timestamp.toString();
+    print('callback() - timestamp: $strTimestamp');
+
+    FlutterForegroundTask.update(
+        notificationTitle: 'callback()',
+        notificationText: strTimestamp,
+        callback: updateCount >= 10 ? callback2 : null);
+
+    updateCount++;
+  }, onDestroy: (timestamp) async {
+    print('callback() is dead.. x_x');
+  });
+}
+
+void callback2() {
+  FlutterForegroundTask.initDispatcher((timestamp) async {
+    final strTimestamp = timestamp.toString();
+    print('callback2() - timestamp: $strTimestamp');
+
+    FlutterForegroundTask.update(
+        notificationTitle: 'callback2()', notificationText: strTimestamp);
+  }, onDestroy: (timestamp) async {
+    print('callback2() is dead.. x_x');
+  });
 }
 
 class _HomePageWidgetState extends State<HomePageWidget> {
@@ -55,6 +87,41 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   late double startlongitude;
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
   final _form = GlobalKey<FormState>();
+
+  void _initForegroundTask() {
+    FlutterForegroundTask.init(
+      notificationOptions: NotificationOptions(
+        channelId: 'Mileage_Calculator',
+        channelName: 'Mileage Calculator',
+        channelDescription: 'Trip started, Calculating distance...',
+        channelImportance: NotificationChannelImportance.LOW,
+        priority: NotificationPriority.LOW,
+        iconData: NotificationIconData(
+          resType: ResourceType.mipmap,
+          resPrefix: ResourcePrefix.ic,
+          name: 'Mileage_Calculator',
+        ),
+      ),
+      foregroundTaskOptions: ForegroundTaskOptions(
+        interval: 5000,
+        autoRunOnBoot: true,
+      ),
+      printDevLog: true,
+    );
+  }
+
+  void _startForegroundTask() {
+    FlutterForegroundTask.start(
+      notificationTitle: 'Foreground task is running',
+      notificationText: 'Tap to return to the app',
+      callback: callback,
+    );
+  }
+
+  void _stopForegroundTask() {
+    FlutterForegroundTask.stop();
+  }
+
   Future<void> _toggleListening() async {
     distancefind = 0.0;
     print("In Function");
@@ -118,11 +185,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         _pressInput?.value = true;
         print('inside _positionStreamSubscription.isPaused');
         _positionStreamSubscription!.resume();
+        _startForegroundTask();
       } else {
         // icon = false;
         _pressInput?.value = false;
         print('inside _positionStreamSubscription.resume');
         _positionStreamSubscription!.pause();
+        _stopForegroundTask();
       }
     });
   }
@@ -153,6 +222,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   void initState() {
     super.initState();
+    _initForegroundTask();
     _bikeRiveFile();
     _determinePosition();
     db = DB();
@@ -361,6 +431,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       icon = false;
                       _positionStreamSubscription!.pause();
                     });
+                    _stopForegroundTask();
                     Navigator.of(context).pop();
                   }),
               TextButton(
@@ -375,260 +446,266 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Scaffold(
-      appBar: AppBar(
-        // leading: ,
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Color(0xFF22262B),
-        automaticallyImplyLeading: false,
-        title: Text(
-          "MileageCalculator",
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 20),
-        ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => InfoPage()));
-              },
-              icon: Icon(LineIcons.infoCircle))
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        // mainAxisAlignment: MainAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 8,
-          ),
-          FloatingActionButton(
-            backgroundColor: Color(0xFF03ADC6),
-            child: (_positionStreamSubscription == null ||
-                    _positionStreamSubscription!.isPaused)
-                ? Icon(Icons.play_arrow)
-                : Icon(Icons.pause),
-            onPressed: () async {
-              // print(serviceEnabled);
-              permission = await Geolocator.checkPermission();
-              if (permission == LocationPermission.denied) {
-                permission = await Geolocator.requestPermission();
-                if (permission == LocationPermission.denied) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return alert(context);
-                    },
-                  );
-                  return Future.error('Location permissions are denied');
-                }
-              } else if (permission == LocationPermission.deniedForever) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return alert(context);
-                  },
-                );
-                return Future.error(
-                    'Location permissions are permanently denied, we cannot request permissions.');
-              } else {
-                print("Pressed");
-                setState(() {
-                  // icon = true;
-                });
-                start = true;
-                _toggleListening();
-              }
-            },
-          ),
-          SizedBox(
-            width: 8,
-          ),
-          icon!
-              ? FloatingActionButton(
-                  backgroundColor: Colors.red,
-                  child: Icon(Icons.stop),
+    return MaterialApp(
+      home: WithForegroundTask(
+        child: Scaffold(
+          appBar: AppBar(
+            // leading: ,
+            centerTitle: true,
+            elevation: 0,
+            backgroundColor: Color(0xFF22262B),
+            automaticallyImplyLeading: false,
+            title: Text(
+              "MileageCalculator",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20),
+            ),
+            actions: [
+              IconButton(
                   onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => InfoPage()));
+                  },
+                  icon: Icon(LineIcons.infoCircle))
+            ],
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            // mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 8,
+              ),
+              FloatingActionButton(
+                backgroundColor: Color(0xFF03ADC6),
+                child: (_positionStreamSubscription == null ||
+                        _positionStreamSubscription!.isPaused)
+                    ? Icon(Icons.play_arrow)
+                    : Icon(Icons.pause),
+                onPressed: () async {
+                  // print(serviceEnabled);
+                  permission = await Geolocator.checkPermission();
+                  if (permission == LocationPermission.denied) {
+                    permission = await Geolocator.requestPermission();
+                    if (permission == LocationPermission.denied) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return alert(context);
+                        },
+                      );
+                      return Future.error('Location permissions are denied');
+                    }
+                  } else if (permission == LocationPermission.deniedForever) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return name(context);
+                        return alert(context);
                       },
                     );
-                  },
-                )
-              : Container()
-        ],
-      ),
-      backgroundColor: Color(0xFF22262B),
-      body: SafeArea(
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-              // decoration: BoxDecoration(
-              //   color: Colors.white,
-              //   borderRadius: BorderRadius.all(Radius.circular(32)),
-              // ),
-              child: Center(
-                child: Container(
-                  width: 400,
-                  height: 180,
-                  child: _bikeArtboard == null
-                      ? const SizedBox(
-                          child: Center(
-                            child: Text("Loading.."),
-                          ),
-                        )
-                      : Rive(
-                          fit: BoxFit.fitWidth,
-                          artboard: _bikeArtboard!,
-                        ),
-                ),
+                    return Future.error(
+                        'Location permissions are permanently denied, we cannot request permissions.');
+                  } else {
+                    print("Pressed");
+                    setState(() {
+                      // icon = true;
+                    });
+                    start = true;
+                    _toggleListening();
+                  }
+                },
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              SizedBox(
+                width: 8,
+              ),
+              icon!
+                  ? FloatingActionButton(
+                      backgroundColor: Colors.red,
+                      child: Icon(Icons.stop),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return name(context);
+                          },
+                        );
+                      },
+                    )
+                  : Container()
+            ],
+          ),
+          backgroundColor: Color(0xFF22262B),
+          body: SafeArea(
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 25, 10, 0),
-                  child: Container(
-                    //padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    width: MediaQuery.of(context).size.width / 2.25,
-                    height: MediaQuery.of(context).size.width / 2.25,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10),
-                          bottomLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10)),
-                      color: Colors.grey[800],
+                Container(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  // decoration: BoxDecoration(
+                  //   color: Colors.white,
+                  //   borderRadius: BorderRadius.all(Radius.circular(32)),
+                  // ),
+                  child: Center(
+                    child: Container(
+                      width: 400,
+                      height: 180,
+                      child: _bikeArtboard == null
+                          ? const SizedBox(
+                              child: Center(
+                                child: Text("Loading.."),
+                              ),
+                            )
+                          : Rive(
+                              fit: BoxFit.fitWidth,
+                              artboard: _bikeArtboard!,
+                            ),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          distancefind!.toStringAsFixed(2),
-                          style: TextStyle(fontSize: 24),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 25, 10, 0),
+                      child: Container(
+                        //padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                        width: MediaQuery.of(context).size.width / 2.25,
+                        height: MediaQuery.of(context).size.width / 2.25,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                          color: Colors.grey[800],
                         ),
-                        Text(
-                          distanceUnit,
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        // Text(
-                        //   speedCheck,
-                        //   style: TextStyle(
-                        //       fontSize: 24, fontStyle: FontStyle.italic),
-                        // )
-                        Row(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(speedcheck
-                                ? LineIcons.biking
-                                : LineIcons.shoePrints),
+                            Text(
+                              distancefind!.toStringAsFixed(2),
+                              style: TextStyle(fontSize: 24),
+                            ),
+                            Text(
+                              distanceUnit,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            // Text(
+                            //   speedCheck,
+                            //   style: TextStyle(
+                            //       fontSize: 24, fontStyle: FontStyle.italic),
+                            // )
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(speedcheck
+                                    ? LineIcons.biking
+                                    : LineIcons.shoePrints),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Text(
+                                  speedCheck,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontStyle: FontStyle.italic),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 25, 10, 0),
+                      child: Container(
+                        //padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                        width: MediaQuery.of(context).size.width / 2.25,
+                        height: MediaQuery.of(context).size.width / 2.25,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                          color: Colors.grey[800],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              batteryUsed!.toStringAsFixed(2),
+                              style: TextStyle(fontSize: 24),
+                            ),
+                            Text(
+                              "% Used",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            // Text(
+                            //   speedCheck,
+                            //   style: TextStyle(
+                            //       fontSize: 24, fontStyle: FontStyle.italic),
+                            // )
+                            Icon(LineIcons.batteryAlt2Full),
                             SizedBox(
                               width: 8,
                             ),
-                            Text(
-                              speedCheck,
-                              style: TextStyle(
-                                  fontSize: 16, fontStyle: FontStyle.italic),
-                            )
                           ],
-                        )
-                      ],
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 25, 10, 0),
-                  child: Container(
-                    //padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    width: MediaQuery.of(context).size.width / 2.25,
-                    height: MediaQuery.of(context).size.width / 2.25,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10),
-                          bottomLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10)),
-                      color: Colors.grey[800],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          batteryUsed!.toStringAsFixed(2),
-                          style: TextStyle(fontSize: 24),
-                        ),
-                        Text(
-                          "% Used",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        // Text(
-                        //   speedCheck,
-                        //   style: TextStyle(
-                        //       fontSize: 24, fontStyle: FontStyle.italic),
-                        // )
-                        Icon(LineIcons.batteryAlt2Full),
-                        SizedBox(
-                          width: 8,
-                        ),
-                      ],
-                    ),
-                  ),
+                  ],
                 ),
               ],
             ),
-          ],
+            // child: Container(
+            //   width: MediaQuery.of(context).size.width,
+            //   height: MediaQuery.of(context).size.height,
+            //   child: Center(
+            //     child: Column(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       mainAxisSize: MainAxisSize.max,
+            //       children: [
+            //         Container(
+            //           padding: EdgeInsets.all(10),
+            //           child: Center(
+            //             child: Column(
+            //               children: [
+            //                 Text(
+            //                   distancefind!.toStringAsFixed(2),
+            //                   style: TextStyle(fontSize: 72),
+            //                 ),
+            //                 Text(
+            //                   "KM",
+            //                   style: TextStyle(fontSize: 20),
+            //                 ),
+            //                 SizedBox(
+            //                   height: 10,
+            //                 ),
+            //                 Text(
+            //                   speedCheck,
+            //                   style: TextStyle(
+            //                       fontSize: 24, fontStyle: FontStyle.italic),
+            //                 )
+            //               ],
+            //             ),
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+          ),
         ),
-        // child: Container(
-        //   width: MediaQuery.of(context).size.width,
-        //   height: MediaQuery.of(context).size.height,
-        //   child: Center(
-        //     child: Column(
-        //       mainAxisAlignment: MainAxisAlignment.center,
-        //       mainAxisSize: MainAxisSize.max,
-        //       children: [
-        //         Container(
-        //           padding: EdgeInsets.all(10),
-        //           child: Center(
-        //             child: Column(
-        //               children: [
-        //                 Text(
-        //                   distancefind!.toStringAsFixed(2),
-        //                   style: TextStyle(fontSize: 72),
-        //                 ),
-        //                 Text(
-        //                   "KM",
-        //                   style: TextStyle(fontSize: 20),
-        //                 ),
-        //                 SizedBox(
-        //                   height: 10,
-        //                 ),
-        //                 Text(
-        //                   speedCheck,
-        //                   style: TextStyle(
-        //                       fontSize: 24, fontStyle: FontStyle.italic),
-        //                 )
-        //               ],
-        //             ),
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
       ),
     );
   }
