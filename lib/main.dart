@@ -15,6 +15,7 @@ Future<void> main() async {
   start_km = prefs.getString('start_km');
   start_charge_percentage = prefs.getString('start_charge_percentage');
 
+  batteryCap = prefs.getString('batteryCap');
   batteryCapacity = prefs.getString('battery_Capacity');
   electricityPrice = prefs.getString('electricity_Price');
   petrolPrize = prefs.getString('petrol_Prize');

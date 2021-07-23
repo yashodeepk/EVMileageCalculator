@@ -6,6 +6,7 @@ var trip_name;
 var start_km;
 var start_charge_percentage;
 var batteryCapacity;
+var batteryCap;
 var electricityPrice;
 var petrolPrize;
 var petrolVehicalMileage;

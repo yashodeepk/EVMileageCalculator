@@ -21,6 +21,7 @@ class WelcomePageWidget extends StatefulWidget {
 
 class _WelcomePageWidgetState extends State<WelcomePageWidget> {
   TextEditingController batteryCapacityController = TextEditingController();
+  TextEditingController batteryCapController = TextEditingController();
   TextEditingController electricityPriceController = TextEditingController();
   TextEditingController petrolPrizeController = TextEditingController();
   TextEditingController petrolVehicalMileageController =
@@ -32,7 +33,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
   final _form = GlobalKey<FormState>();
   void getSPData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
+    batteryCap = prefs.getString('batteryCap');
     batteryCapacity = prefs.getString('battery_Capacity');
     electricityPrice = prefs.getString('electricity_Price');
     petrolPrize = prefs.getString('petrol_Prize');
@@ -62,6 +63,12 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
     if (distanceUnit != null) {
       setState(() {
         dropdownValue = distanceUnit;
+      });
+    }
+
+    if (batteryCap != null) {
+      setState(() {
+        batteryCapController.text = batteryCap;
       });
     }
 
@@ -100,6 +107,9 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
     prefs.setString('select_currency', user);
     print('Currency ' + user);
     distanceUnit = dropdownValue;
+    prefs.setString('batteryCap', batteryCapController.text);
+    batteryCap = batteryCapController.text;
+    print('Battery Capacity is ' + batteryCap);
     selectcurrency = user;
   }
 
@@ -334,6 +344,91 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               obscureText: false,
                               decoration: InputDecoration(
                                 hintText: dropdownValue.toString(),
+                                hintStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 17,
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(20),
+                                    bottomRight: Radius.circular(20),
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                  ),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(20),
+                                    bottomRight: Radius.circular(20),
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Color(0xFF43464C),
+                              ),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width / 2,
+                            child: Center(
+                              child: Tooltip(
+                                message: "Your EV's battery capacity in KWH",
+                                showDuration: Duration(seconds: 3),
+                                child: Text(
+                                  'EV Battery Capacity',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                            width: MediaQuery.of(context).size.width / 2,
+                            child: TextFormField(
+                              validator: (String? value) {
+                                if (value!.isEmpty) {
+                                  return "Please enter your EVs Mileage";
+                                }
+                                final n = num.tryParse(value);
+                                if (n == null) {
+                                  return '"$value" is not a valid number';
+                                }
+                                return null;
+                              },
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(3),
+                              ],
+                              controller: batteryCapController,
+                              obscureText: false,
+                              decoration: InputDecoration(
+                                hintText: 'KWH',
                                 hintStyle: TextStyle(
                                   color: Colors.white,
                                   fontSize: 17,

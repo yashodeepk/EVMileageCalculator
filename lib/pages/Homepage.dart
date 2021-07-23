@@ -11,6 +11,14 @@ import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:line_icons/line_icons.dart';
 
+bool? icon = false;
+bool start = false;
+bool speedcheck = false;
+String speedCheck = "Still";
+double? batteryUsed = 0.00;
+double? distancefind = 0.0;
+StreamSubscription<Position>? _positionStreamSubscription;
+
 class HomePageWidget extends StatefulWidget {
   @override
   _HomePageWidgetState createState() => _HomePageWidgetState();
@@ -24,7 +32,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   Artboard? _bikeArtboard;
   late StateMachineController _controller;
   SMIInput<bool>? _pressInput;
-
   TextEditingController titleController = TextEditingController();
   TextEditingController startkmController = TextEditingController();
   TextEditingController endkmController = TextEditingController();
@@ -35,8 +42,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   bool fetching = true;
   bool bottomdialoag = true;
   late int distance;
-  double? distancefind = 0.0;
-  String speedCheck = "Still";
   late int charging;
   late int statrtdistance;
   late int enddistance;
@@ -44,14 +49,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   late int endCharging;
   late LocationPermission permission;
   late bool serviceEnabled;
-  bool start = false;
   late DB db;
-  bool icon = false;
-  bool speedcheck = false;
   late double startlatitude;
   late double startlongitude;
-  double? batteryUsed = 0.00;
-  StreamSubscription<Position>? _positionStreamSubscription;
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
 
   Future<void> _toggleListening() async {
@@ -114,10 +114,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       }
       if (_positionStreamSubscription!.isPaused || icon == false) {
         icon = true;
+        _pressInput?.value = true;
         print('inside _positionStreamSubscription.isPaused');
         _positionStreamSubscription!.resume();
       } else {
         // icon = false;
+        _pressInput?.value = false;
         print('inside _positionStreamSubscription.resume');
         _positionStreamSubscription!.pause();
       }
@@ -136,7 +138,14 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     } else {
       return;
     }
-    setState(() => _bikeArtboard = artboard);
+    setState(() {
+      _bikeArtboard = artboard;
+      if (_positionStreamSubscription!.isPaused) {
+        _pressInput?.value = false;
+      } else {
+        _pressInput?.value = true;
+      }
+    });
   }
 
   @override
@@ -391,8 +400,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               } else {
                 print("Pressed");
                 setState(() {
-                  _pressInput?.value = true;
-
                   // icon = true;
                 });
                 start = true;
@@ -403,7 +410,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           SizedBox(
             width: 8,
           ),
-          icon
+          icon!
               ? FloatingActionButton(
                   backgroundColor: Colors.red,
                   child: Icon(Icons.stop),
