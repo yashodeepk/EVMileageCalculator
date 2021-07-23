@@ -522,17 +522,29 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 width: 8,
               ),
               icon!
-                  ? FloatingActionButton(
-                      backgroundColor: Colors.red,
-                      child: Icon(Icons.stop),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return name(context);
-                          },
-                        );
+                  ? InkWell(
+                      onLongPress: () {
+                        setState(() {
+                          print('reset');
+                          _pressInput?.value = false;
+                          distancefind = 0.0;
+                          batteryUsed = 0.00;
+                          icon = false;
+                          _positionStreamSubscription!.pause();
+                        });
                       },
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.red,
+                        child: Icon(Icons.stop),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return name(context);
+                            },
+                          );
+                        },
+                      ),
                     )
                   : Container()
             ],
