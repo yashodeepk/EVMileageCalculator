@@ -32,10 +32,10 @@ void callback() {
 
   FlutterForegroundTask.initDispatcher((timestamp) async {
     final strTimestamp = timestamp.toString();
-    print('callback() - timestamp: $strTimestamp');
+    print('Calculating Distance - Time: $strTimestamp');
 
     FlutterForegroundTask.update(
-        notificationTitle: 'callback()',
+        notificationTitle: 'Calculating Distance',
         notificationText: strTimestamp,
         callback: updateCount >= 10 ? callback2 : null);
 
@@ -51,7 +51,8 @@ void callback2() {
     print('callback2() - timestamp: $strTimestamp');
 
     FlutterForegroundTask.update(
-        notificationTitle: 'callback2()', notificationText: strTimestamp);
+        notificationTitle: 'Calculating Distance',
+        notificationText: strTimestamp);
   }, onDestroy: (timestamp) async {
     print('callback2() is dead.. x_x');
   });
@@ -91,7 +92,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   void _initForegroundTask() {
     FlutterForegroundTask.init(
       notificationOptions: NotificationOptions(
-        channelId: 'Mileage_Calculator',
+        channelId: 'notification_channel_id',
         channelName: 'Mileage Calculator',
         channelDescription: 'Trip started, Calculating distance...',
         channelImportance: NotificationChannelImportance.LOW,
@@ -99,7 +100,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         iconData: NotificationIconData(
           resType: ResourceType.mipmap,
           resPrefix: ResourcePrefix.ic,
-          name: 'Mileage_Calculator',
+          name: 'launcher',
         ),
       ),
       foregroundTaskOptions: ForegroundTaskOptions(
