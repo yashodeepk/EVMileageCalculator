@@ -532,6 +532,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           batteryUsed = 0.00;
                           icon = false;
                           _positionStreamSubscription!.pause();
+                          _stopForegroundTask();
                         });
                       },
                       child: FloatingActionButton(
