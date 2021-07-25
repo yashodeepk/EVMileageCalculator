@@ -353,9 +353,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   }
                   return null;
                 },
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.name,
                 inputFormatters: [
-                  LengthLimitingTextInputFormatter(3),
+                  LengthLimitingTextInputFormatter(6),
                 ],
                 obscureText: false,
                 decoration: InputDecoration(

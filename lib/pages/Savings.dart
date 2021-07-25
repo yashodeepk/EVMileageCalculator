@@ -26,7 +26,6 @@ class _CompareWidgetState extends State<CompareWidget> {
   @override
   void initState() {
     super.initState();
-    savings = 0.00;
     db = DB();
     getdata();
   }
@@ -40,6 +39,7 @@ class _CompareWidgetState extends State<CompareWidget> {
     datas = datas.reversed.toList();
 
     setState(() {
+      savings = 0.00;
       datas.map((trip) {
         savings = savings +
             (double.parse(trip.petrol.toString()) -
@@ -110,6 +110,7 @@ class _CompareWidgetState extends State<CompareWidget> {
                                                   json: jsonDecode(
                                                       selectcurrency))
                                               .symbol +
+                                          ' ' +
                                           savings.toStringAsFixed(3),
                                       style: GoogleFonts.getFont(
                                         'Poppins',
