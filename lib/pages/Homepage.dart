@@ -188,7 +188,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         _positionStreamSubscription!.resume();
         _startForegroundTask();
       } else {
-        // icon = false;
+        icon = false;
         _pressInput?.value = false;
         print('inside _positionStreamSubscription.resume');
         _positionStreamSubscription!.pause();
@@ -528,15 +528,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               icon!
                   ? InkWell(
                       onLongPress: () {
+                        print('reset');
                         setState(() {
-                          print('reset');
                           _pressInput?.value = false;
                           distancefind = 0.0;
                           batteryUsed = 0.00;
                           icon = false;
                           _positionStreamSubscription!.pause();
-                          _stopForegroundTask();
                         });
+                        _stopForegroundTask();
                       },
                       child: FloatingActionButton(
                         backgroundColor: Colors.red,
