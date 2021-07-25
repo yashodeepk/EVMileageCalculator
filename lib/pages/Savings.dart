@@ -151,7 +151,7 @@ class _CompareWidgetState extends State<CompareWidget> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 AutoSizeText(
-                                  trip.title.toString(),
+                                  "Name: " + trip.title.toString(),
                                   style: GoogleFonts.getFont(
                                     'Poppins',
                                     fontSize: 16,
