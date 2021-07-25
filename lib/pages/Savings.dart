@@ -26,9 +26,9 @@ class _CompareWidgetState extends State<CompareWidget> {
   @override
   void initState() {
     super.initState();
+    savings = 0.00;
     db = DB();
     getdata();
-    savings = 0.00;
   }
 
   void reload() {
@@ -38,7 +38,13 @@ class _CompareWidgetState extends State<CompareWidget> {
   void getdata() async {
     datas = await db.getData();
     datas = datas.reversed.toList();
+
     setState(() {
+      datas.map((trip) {
+        savings = savings +
+            (double.parse(trip.petrol.toString()) -
+                double.parse(trip.electricity.toString()));
+      });
       fetching = false;
     });
   }
@@ -127,11 +133,6 @@ class _CompareWidgetState extends State<CompareWidget> {
                 padding: EdgeInsets.fromLTRB(20, 150, 20, 10),
                 child: ListView(
                   children: datas.map((trip) {
-                    setState(() {
-                      savings = savings +
-                          (double.parse(trip.petrol.toString()) -
-                              double.parse(trip.electricity.toString()));
-                    });
                     return Container(
                       margin: const EdgeInsets.only(bottom: 10),
                       decoration: BoxDecoration(
