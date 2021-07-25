@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mileagecalculator/pages/Homepage.dart';
 import 'package:mileagecalculator/pages/Savings.dart';
 import 'package:mileagecalculator/pages/WelcomePage.dart';
@@ -22,7 +23,10 @@ Future<void> main() async {
   petrolVehicalMileage = prefs.getString('petrol_Vehical_Mileage');
   selectcurrency = prefs.getString('select_currency');
   distanceUnit = prefs.getString('distanceUnit');
-  runApp(MyApp());
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
