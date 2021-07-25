@@ -151,7 +151,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   Geolocator.distanceBetween(startlatitude, startlongitude,
                           position.latitude, position.longitude) /
                       1000;
-              batteryUsed = batteryUsed! +
+              batteryUsed =
                   (distancefind! / double.parse(batteryCapacity)) * 100;
               startlatitude = position.latitude;
               startlongitude = position.longitude;
