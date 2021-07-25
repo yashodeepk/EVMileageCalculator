@@ -121,7 +121,8 @@ class _DataPageState extends State<DataPage> {
                                     ),
                                     //SizedBox(width: 40),
                                     Text(
-                                      trip.distance.toString() +
+                                      double.parse(trip.distance.toString())
+                                              .toStringAsFixed(2) +
                                           " " +
                                           distanceUnit,
                                       style: GoogleFonts.getFont(
@@ -132,7 +133,9 @@ class _DataPageState extends State<DataPage> {
                                     ),
                                     //SizedBox(width: 40),
                                     Text(
-                                      trip.savecharging.toString() + "% used",
+                                      double.parse(trip.savecharging.toString())
+                                              .toStringAsFixed(2) +
+                                          "% used",
                                       style: GoogleFonts.getFont(
                                         'Poppins',
                                         fontSize: 16,
