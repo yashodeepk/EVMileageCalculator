@@ -40,12 +40,17 @@ class _CompareWidgetState extends State<CompareWidget> {
 
     setState(() {
       savings = 0.00;
-      datas.map((trip) {
+      for (int tripIndex = 0; tripIndex < datas.length; tripIndex++) {
+        print("Petrol is " +
+            double.parse(datas[tripIndex].petrol.toString()).toString());
+        print("Electricity is " +
+            double.parse(datas[tripIndex].electricity.toString()).toString());
         savings = savings +
-            (double.parse(trip.petrol.toString()) -
-                double.parse(trip.electricity.toString()));
-      });
+            (double.parse(datas[tripIndex].petrol.toString()) -
+                double.parse(datas[tripIndex].electricity.toString()));
+      }
       fetching = false;
+      print("Savings is " + savings.toString());
     });
   }
 
