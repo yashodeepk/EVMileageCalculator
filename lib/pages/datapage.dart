@@ -25,6 +25,7 @@ class _DataPageState extends State<DataPage> {
   void getdata() async {
     data = db!.getData();
     datas = await db!.getData();
+    datas = datas.reversed.toList();
     setState(() {
       fetching = false;
     });
@@ -91,6 +92,7 @@ class _DataPageState extends State<DataPage> {
                     return ListView(
                       children: datas.map((trip) {
                         return Container(
+                          key: Key(trip.id.toString()),
                           margin: const EdgeInsets.only(bottom: 10),
                           decoration: BoxDecoration(
                             border: Border(
@@ -119,7 +121,8 @@ class _DataPageState extends State<DataPage> {
                                     ),
                                     //SizedBox(width: 40),
                                     Text(
-                                      trip.distance.toString() +
+                                      double.parse(trip.distance.toString())
+                                              .toStringAsFixed(2) +
                                           " " +
                                           distanceUnit,
                                       style: GoogleFonts.getFont(
@@ -130,7 +133,9 @@ class _DataPageState extends State<DataPage> {
                                     ),
                                     //SizedBox(width: 40),
                                     Text(
-                                      trip.savecharging.toString() + "% used",
+                                      double.parse(trip.savecharging.toString())
+                                              .toStringAsFixed(2) +
+                                          "% used",
                                       style: GoogleFonts.getFont(
                                         'Poppins',
                                         fontSize: 16,
@@ -151,6 +156,9 @@ class _DataPageState extends State<DataPage> {
                                       ),
                                     ),
                                     //SizedBox(width: 40),
+                                    // SizedBox(
+                                    //   height: 30,
+                                    // ),
                                     IconButton(
                                         icon: Icon(Icons.delete),
                                         color: Colors.white,

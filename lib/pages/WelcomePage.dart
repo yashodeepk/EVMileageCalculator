@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:currency_picker/currency_picker.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:mileagecalculator/Database/database.dart';
+import 'package:mileagecalculator/pages/infoPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
@@ -20,6 +21,7 @@ class WelcomePageWidget extends StatefulWidget {
 
 class _WelcomePageWidgetState extends State<WelcomePageWidget> {
   TextEditingController batteryCapacityController = TextEditingController();
+  TextEditingController batteryCapController = TextEditingController();
   TextEditingController electricityPriceController = TextEditingController();
   TextEditingController petrolPrizeController = TextEditingController();
   TextEditingController petrolVehicalMileageController =
@@ -31,7 +33,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
   final _form = GlobalKey<FormState>();
   void getSPData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
+    batteryCap = prefs.getString('batteryCap');
     batteryCapacity = prefs.getString('battery_Capacity');
     electricityPrice = prefs.getString('electricity_Price');
     petrolPrize = prefs.getString('petrol_Prize');
@@ -61,6 +63,12 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
     if (distanceUnit != null) {
       setState(() {
         dropdownValue = distanceUnit;
+      });
+    }
+
+    if (batteryCap != null) {
+      setState(() {
+        batteryCapController.text = batteryCap;
       });
     }
 
@@ -99,6 +107,9 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
     prefs.setString('select_currency', user);
     print('Currency ' + user);
     distanceUnit = dropdownValue;
+    prefs.setString('batteryCap', batteryCapController.text);
+    batteryCap = batteryCapController.text;
+    print('Battery Capacity is ' + batteryCap);
     selectcurrency = user;
   }
 
@@ -106,6 +117,14 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => InfoPage()));
+              },
+              icon: Icon(LineIcons.infoCircle))
+        ],
         leading: !widget.fromMainPage
             ? IconButton(
                 icon: Icon(Icons.arrow_back),
@@ -118,6 +137,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
             : Container(),
         elevation: 0,
         backgroundColor: Color(0xFF22262B),
+        centerTitle: true,
         automaticallyImplyLeading: false,
         title: Text(
           "Setup Page",
@@ -204,6 +224,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                     child: Center(
                                       child: AutoSizeText(
                                         select,
+                                        maxLines: 1,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 18,
@@ -228,8 +249,9 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               child: Tooltip(
                                 message: 'What is the Distance unit you use?',
                                 showDuration: Duration(seconds: 3),
-                                child: Text(
-                                  'Select Distance unit',
+                                child: AutoSizeText(
+                                  ' Select Distance unit ',
+                                  maxLines: 1,
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -366,6 +388,91 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                     Container(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                       child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width / 2,
+                            child: Center(
+                              child: Tooltip(
+                                message: "Your EV's battery capacity in KWH",
+                                showDuration: Duration(seconds: 3),
+                                child: Text(
+                                  'EV Battery Capacity',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                            width: MediaQuery.of(context).size.width / 2,
+                            child: TextFormField(
+                              validator: (String? value) {
+                                if (value!.isEmpty) {
+                                  return "Please enter your EVs Mileage";
+                                }
+                                final n = num.tryParse(value);
+                                if (n == null) {
+                                  return '"$value" is not a valid number';
+                                }
+                                return null;
+                              },
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(3),
+                              ],
+                              controller: batteryCapController,
+                              obscureText: false,
+                              decoration: InputDecoration(
+                                hintText: 'KWH',
+                                hintStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 17,
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(20),
+                                    bottomRight: Radius.circular(20),
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                  ),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(20),
+                                    bottomRight: Radius.circular(20),
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Color(0xFF43464C),
+                              ),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
                         children: [
@@ -376,8 +483,9 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                 message:
                                     'Unit price of electicity in your area',
                                 showDuration: Duration(seconds: 3),
-                                child: Text(
-                                  'Electricity Unit Price',
+                                child: AutoSizeText(
+                                  ' Electricity Unit Price ',
+                                  maxLines: 1,
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -550,7 +658,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                     'Distance covered by the petrol vehicle in 1 litre of petrol',
                                 showDuration: Duration(seconds: 3),
                                 child: AutoSizeText(
-                                  'Petrol vehicle Mileage',
+                                  ' Petrol vehicle Mileage ',
                                   maxLines: 1,
                                   textAlign: TextAlign.start,
                                   style: TextStyle(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mileagecalculator/pages/Homepage.dart';
 import 'package:mileagecalculator/pages/Savings.dart';
 import 'package:mileagecalculator/pages/WelcomePage.dart';
-import 'package:mileagecalculator/pages/datapage.dart';
 import 'package:mileagecalculator/pages/analaticsPage.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +15,7 @@ Future<void> main() async {
   start_km = prefs.getString('start_km');
   start_charge_percentage = prefs.getString('start_charge_percentage');
 
+  batteryCap = prefs.getString('batteryCap');
   batteryCapacity = prefs.getString('battery_Capacity');
   electricityPrice = prefs.getString('electricity_Price');
   petrolPrize = prefs.getString('petrol_Prize');
@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final _pageOptions = [
     HomePageWidget(),
     CompareWidget(),
-    analatics(),
+    Analatics(),
   ];
   @override
   Widget build(BuildContext context) {

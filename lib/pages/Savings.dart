@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:mileagecalculator/Database/database.dart';
 import 'package:mileagecalculator/Database/datamodel.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mileagecalculator/pages/WelcomePage.dart';
+import 'package:mileagecalculator/pages/infoPage.dart';
 
 class CompareWidget extends StatefulWidget {
   @override
@@ -19,12 +21,14 @@ class _CompareWidgetState extends State<CompareWidget> {
   List<DataModel> datas = [];
   bool fetching = true;
   late DB db;
+  var savings = 0.00;
 
   @override
   void initState() {
     super.initState();
     db = DB();
     getdata();
+    savings = 0.00;
   }
 
   void reload() {
@@ -33,6 +37,7 @@ class _CompareWidgetState extends State<CompareWidget> {
 
   void getdata() async {
     datas = await db.getData();
+    datas = datas.reversed.toList();
     setState(() {
       fetching = false;
     });
@@ -42,21 +47,27 @@ class _CompareWidgetState extends State<CompareWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        // leading: IconButton(
-        //   icon: Icon(Icons.hourglass_empty),
-        //   color: Color(0xFF22262B),
-        //   onPressed: () {},
-        // ),
-        elevation: 0,
-        backgroundColor: Color(0xFF22262B),
-        title: Center(
-          child: Text(
+          automaticallyImplyLeading: false,
+          // leading: IconButton(
+          //   icon: Icon(Icons.hourglass_empty),
+          //   color: Color(0xFF22262B),
+          //   onPressed: () {},
+          // ),
+          elevation: 0,
+          centerTitle: true,
+          backgroundColor: Color(0xFF22262B),
+          title: Text(
             "Savings",
             style: TextStyle(fontSize: 24),
           ),
-        ),
-      ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => InfoPage()));
+                },
+                icon: Icon(LineIcons.infoCircle))
+          ]),
       backgroundColor: Color(0xFF22262B),
       body: SafeArea(
         child: Container(
@@ -93,7 +104,7 @@ class _CompareWidgetState extends State<CompareWidget> {
                                                   json: jsonDecode(
                                                       selectcurrency))
                                               .symbol +
-                                          '40,000',
+                                          savings.toStringAsFixed(3),
                                       style: GoogleFonts.getFont(
                                         'Poppins',
                                         fontSize: 24,
@@ -116,6 +127,11 @@ class _CompareWidgetState extends State<CompareWidget> {
                 padding: EdgeInsets.fromLTRB(20, 150, 20, 10),
                 child: ListView(
                   children: datas.map((trip) {
+                    setState(() {
+                      savings = savings +
+                          (double.parse(trip.petrol.toString()) -
+                              double.parse(trip.electricity.toString()));
+                    });
                     return Container(
                       margin: const EdgeInsets.only(bottom: 10),
                       decoration: BoxDecoration(
@@ -135,7 +151,7 @@ class _CompareWidgetState extends State<CompareWidget> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 AutoSizeText(
-                                  trip.title.toString(),
+                                  "Name: " + trip.title.toString(),
                                   style: GoogleFonts.getFont(
                                     'Poppins',
                                     fontSize: 16,
@@ -149,7 +165,8 @@ class _CompareWidgetState extends State<CompareWidget> {
                                       Currency.from(
                                               json: jsonDecode(selectcurrency))
                                           .symbol +
-                                      trip.electricity.toString(),
+                                      double.parse(trip.electricity.toString())
+                                          .toStringAsFixed(2),
                                   style: GoogleFonts.getFont(
                                     'Poppins',
                                     fontSize: 16,
@@ -163,7 +180,8 @@ class _CompareWidgetState extends State<CompareWidget> {
                                       Currency.from(
                                               json: jsonDecode(selectcurrency))
                                           .symbol +
-                                      trip.petrol.toString(),
+                                      double.parse(trip.petrol.toString())
+                                          .toStringAsFixed(2),
                                   style: GoogleFonts.getFont(
                                     'Poppins',
                                     fontSize: 16,
@@ -182,6 +200,9 @@ class _CompareWidgetState extends State<CompareWidget> {
                                     'Poppins',
                                   ),
                                 ),
+                                // SizedBox(
+                                //   height: 30,
+                                // )
                                 IconButton(
                                     icon: Icon(Icons.delete),
                                     color: Colors.white,

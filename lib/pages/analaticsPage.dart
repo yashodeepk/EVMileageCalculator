@@ -1,17 +1,19 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:mileagecalculator/Database/database.dart';
 import 'package:mileagecalculator/Database/datamodel.dart';
 import 'package:mileagecalculator/pages/datapage.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:currency_picker/currency_picker.dart';
+import 'package:mileagecalculator/pages/infoPage.dart';
 
-class analatics extends StatefulWidget {
+class Analatics extends StatefulWidget {
   @override
-  _analaticsState createState() => _analaticsState();
+  _AnalaticsState createState() => _AnalaticsState();
 }
 
-class _analaticsState extends State<analatics> {
+class _AnalaticsState extends State<Analatics> {
   Future<List<DataModel>>? data;
   List<DataModel> datas = [];
   DB? db;
@@ -103,21 +105,27 @@ class _analaticsState extends State<analatics> {
     return Scaffold(
       backgroundColor: Color(0xFF22262B),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        // leading: IconButton(
-        //   icon: Icon(Icons.hourglass_empty),
-        //   color: Color(0xFF22262B),
-        //   onPressed: () {},
-        // ),
-        elevation: 0,
-        backgroundColor: Color(0xFF22262B),
-        title: Center(
-          child: Text(
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          // leading: IconButton(
+          //   icon: Icon(Icons.hourglass_empty),
+          //   color: Color(0xFF22262B),
+          //   onPressed: () {},
+          // ),
+          elevation: 0,
+          backgroundColor: Color(0xFF22262B),
+          title: Text(
             "Analytics",
             style: TextStyle(fontSize: 24),
           ),
-        ),
-      ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => InfoPage()));
+                },
+                icon: Icon(LineIcons.infoCircle))
+          ]),
       body: SafeArea(
         child: Container(
           width: MediaQuery.of(context).size.width,

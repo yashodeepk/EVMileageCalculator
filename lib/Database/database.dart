@@ -6,6 +6,7 @@ var trip_name;
 var start_km;
 var start_charge_percentage;
 var batteryCapacity;
+var batteryCap;
 var electricityPrice;
 var petrolPrize;
 var petrolVehicalMileage;
@@ -49,6 +50,6 @@ class DB {
 
   Future<int> delete(int id) async {
     final Database db = await initDB();
-    return await db.delete("TRIPTable", where: "id", whereArgs: [id]);
+    return await db.delete("TRIPTable", where: "id = ?", whereArgs: [id]);
   }
 }
