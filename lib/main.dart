@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'Are you sure?',
             ),
             content: new Text(
-              'Do you want to exit an App',
+              'Do you want to exit this App',
             ),
             actions: <Widget>[
               TextButton(
