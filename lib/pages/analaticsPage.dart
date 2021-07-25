@@ -283,7 +283,7 @@ class _AnalaticsState extends State<Analatics> {
                 ),
                 children: [
                   TextSpan(
-                    text: (flSpot.y * 10).toString(),
+                    text: (flSpot.y * 10).toStringAsFixed(2),
                     style: TextStyle(
                       color: Colors.grey[100],
                       fontWeight: FontWeight.normal,
