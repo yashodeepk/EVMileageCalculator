@@ -448,6 +448,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       debugShowMaterialGrid: false,
       theme: ThemeData.dark(),
       home: WithForegroundTask(
