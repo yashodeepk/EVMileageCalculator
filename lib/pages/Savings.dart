@@ -28,7 +28,6 @@ class _CompareWidgetState extends State<CompareWidget> {
     super.initState();
     db = DB();
     getdata();
-    savings = 0.00;
   }
 
   void reload() {
@@ -38,8 +37,20 @@ class _CompareWidgetState extends State<CompareWidget> {
   void getdata() async {
     datas = await db.getData();
     datas = datas.reversed.toList();
+
     setState(() {
+      savings = 0.00;
+      for (int tripIndex = 0; tripIndex < datas.length; tripIndex++) {
+        print("Petrol is " +
+            double.parse(datas[tripIndex].petrol.toString()).toString());
+        print("Electricity is " +
+            double.parse(datas[tripIndex].electricity.toString()).toString());
+        savings = savings +
+            (double.parse(datas[tripIndex].petrol.toString()) -
+                double.parse(datas[tripIndex].electricity.toString()));
+      }
       fetching = false;
+      print("Savings is " + savings.toString());
     });
   }
 
@@ -104,6 +115,7 @@ class _CompareWidgetState extends State<CompareWidget> {
                                                   json: jsonDecode(
                                                       selectcurrency))
                                               .symbol +
+                                          ' ' +
                                           savings.toStringAsFixed(3),
                                       style: GoogleFonts.getFont(
                                         'Poppins',
@@ -127,11 +139,6 @@ class _CompareWidgetState extends State<CompareWidget> {
                 padding: EdgeInsets.fromLTRB(20, 150, 20, 10),
                 child: ListView(
                   children: datas.map((trip) {
-                    setState(() {
-                      savings = savings +
-                          (double.parse(trip.petrol.toString()) -
-                              double.parse(trip.electricity.toString()));
-                    });
                     return Container(
                       margin: const EdgeInsets.only(bottom: 10),
                       decoration: BoxDecoration(
@@ -151,7 +158,7 @@ class _CompareWidgetState extends State<CompareWidget> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 AutoSizeText(
-                                  trip.title.toString(),
+                                  "Name: " + trip.title.toString(),
                                   style: GoogleFonts.getFont(
                                     'Poppins',
                                     fontSize: 16,

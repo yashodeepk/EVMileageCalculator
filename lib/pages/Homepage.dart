@@ -143,7 +143,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   Geolocator.distanceBetween(startlatitude, startlongitude,
                           position.latitude, position.longitude) /
                       1000;
-              batteryUsed = batteryUsed! +
+              batteryUsed =
                   (distancefind! / double.parse(batteryCapacity)) * 100;
               startlatitude = position.latitude;
               startlongitude = position.longitude;
@@ -176,7 +176,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         _positionStreamSubscription!.resume();
         _startForegroundTask();
       } else {
-        // icon = false;
+        icon = false;
         _pressInput?.value = false;
         print('inside _positionStreamSubscription.resume');
         _positionStreamSubscription!.pause();
@@ -341,8 +341,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   }
                   return null;
                 },
+                keyboardType: TextInputType.name,
                 inputFormatters: [
-                  LengthLimitingTextInputFormatter(3),
+                  LengthLimitingTextInputFormatter(6),
                 ],
                 obscureText: false,
                 decoration: InputDecoration(
@@ -436,8 +437,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return MaterialApp(
-      // debugShowMaterialGrid: false,
       debugShowCheckedModeBanner: false,
+      debugShowMaterialGrid: false,
       theme: ThemeData.dark(),
       home: WithForegroundTask(
         child: Scaffold(
@@ -516,15 +517,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               icon!
                   ? InkWell(
                       onLongPress: () {
+                        print('reset');
                         setState(() {
-                          print('reset');
                           _pressInput?.value = false;
                           distancefind = 0.0;
                           batteryUsed = 0.00;
                           icon = false;
                           _positionStreamSubscription!.pause();
-                          _stopForegroundTask();
                         });
+                        _stopForegroundTask();
                       },
                       child: FloatingActionButton(
                         backgroundColor: Colors.red,

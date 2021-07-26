@@ -61,8 +61,10 @@ class _AnalaticsState extends State<Analatics> {
       print("Data Length is " + datas.length.toString());
       for (int dataIndex = 0; dataIndex < length; dataIndex++) {
         print(datas[dataIndex].electricity.toString());
-        arrSpots.add(FlSpot(double.parse(dataIndex.toString()),
-            double.parse(datas[dataIndex].distance.toString()) / 10));
+        double.parse(datas[dataIndex].distance.toString()) < 100
+            ? arrSpots.add(FlSpot(double.parse(dataIndex.toString()),
+                double.parse(datas[dataIndex].distance.toString()) / 10))
+            : arrSpots.add(FlSpot(double.parse(dataIndex.toString()), 10.00));
         avgCost =
             avgCost + double.parse(datas[dataIndex].electricity.toString());
         avgSavings = avgSavings +
@@ -283,7 +285,9 @@ class _AnalaticsState extends State<Analatics> {
                 ),
                 children: [
                   TextSpan(
-                    text: (flSpot.y * 10).toString(),
+                    text: double.parse(
+                            (datas[flSpot.x.toInt()].distance.toString()))
+                        .toStringAsFixed(2),
                     style: TextStyle(
                       color: Colors.grey[100],
                       fontWeight: FontWeight.normal,
