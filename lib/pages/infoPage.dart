@@ -130,7 +130,7 @@ class _InfoPageState extends State<InfoPage> {
                                 children: [
                                   TextSpan(
                                     text:
-                                        "Then Using Distance we calculate Battery persentage and Traveling costs ",
+                                        "Then Using Distance we calculate Battery percentage and travelling cost ",
                                   ),
                                   // WidgetSpan(
                                   //   child: Icon(LineIcons.mapMarker, size: 14),
@@ -200,7 +200,7 @@ class _InfoPageState extends State<InfoPage> {
                           children: [
                             TextSpan(
                               text:
-                                  "Depending on Phone Hardware Application can give False reding 😟",
+                                  "Depending on Phone Hardware Application can give False reading 😟",
                             ),
                           ],
                         ),
