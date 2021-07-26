@@ -28,33 +28,25 @@ class HomePageWidget extends StatefulWidget {
 
 // The callback function should always be a top-level function.
 void callback() {
-  int updateCount = 0;
+  // int updateCount = 0;
 
   FlutterForegroundTask.initDispatcher((timestamp) async {
     final strTimestamp = timestamp.toString();
     print('Calculating Distance - Time: $strTimestamp');
 
     FlutterForegroundTask.update(
-        notificationTitle: 'Calculating Distance',
-        notificationText: strTimestamp,
-        callback: updateCount >= 10 ? callback2 : null);
+      notificationTitle: 'Calculating Distance',
+      notificationText: 'Distance: ' +
+          distancefind!.toStringAsFixed(1) +
+          'Km ' +
+          ' Battery used: ' +
+          batteryUsed!.toStringAsFixed(1) +
+          " % \u{1F50B}",
+    );
 
-    updateCount++;
+    // updateCount++;
   }, onDestroy: (timestamp) async {
     print('callback() is dead.. x_x');
-  });
-}
-
-void callback2() {
-  FlutterForegroundTask.initDispatcher((timestamp) async {
-    final strTimestamp = timestamp.toString();
-    print('callback2() - timestamp: $strTimestamp');
-
-    FlutterForegroundTask.update(
-        notificationTitle: 'Calculating Distance',
-        notificationText: strTimestamp);
-  }, onDestroy: (timestamp) async {
-    print('callback2() is dead.. x_x');
   });
 }
 
@@ -113,7 +105,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   void _startForegroundTask() {
     FlutterForegroundTask.start(
-      notificationTitle: 'Foreground task is running',
+      notificationTitle: 'Trip started, Calculating distance...',
       notificationText: 'Tap to return to the app',
       callback: callback,
     );
@@ -165,12 +157,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         });
         print("Distance is " + distancefind.toString());
         print("Start " +
-            // start.latitude.toString() +
-            // ", " +
-            // start.longitude.toString() +
-            "end " +
             position.latitude.toString() +
-            ', ok ' +
+            ', end ' +
             position.longitude.toString());
       });
     }
@@ -353,7 +341,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   }
                   return null;
                 },
-                keyboardType: TextInputType.number,
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(3),
                 ],
@@ -430,6 +417,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       distancefind = 0.0;
                       batteryUsed = 0.00;
                       icon = false;
+                      speedCheck = "Still";
                       _positionStreamSubscription!.pause();
                     });
                     _stopForegroundTask();
@@ -448,6 +436,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return MaterialApp(
+      // debugShowMaterialGrid: false,
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
       home: WithForegroundTask(
         child: Scaffold(
           appBar: AppBar(
@@ -595,6 +586,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               bottomLeft: Radius.circular(10),
                               bottomRight: Radius.circular(10)),
                           color: Colors.grey[800],
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.5),
+                              spreadRadius: 1.5,
+                              blurRadius: 5,
+                              // offset:
+                              //     Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -649,6 +649,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               bottomLeft: Radius.circular(10),
                               bottomRight: Radius.circular(10)),
                           color: Colors.grey[800],
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.5),
+                              spreadRadius: 1.5,
+                              blurRadius: 5,
+                              // offset:
+                              //     Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
