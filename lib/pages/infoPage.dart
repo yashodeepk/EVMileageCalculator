@@ -70,7 +70,7 @@ class _InfoPageState extends State<InfoPage> {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: "This Application uses Gps Location ",
+                                    text: "This Application uses GPS Location ",
                                   ),
                                   WidgetSpan(
                                       child: Icon(
@@ -88,7 +88,7 @@ class _InfoPageState extends State<InfoPage> {
                                         size: 16, color: Colors.green),
                                   ),
                                   TextSpan(
-                                    text: " to find speed of vehicle",
+                                    text: " to find speed of vehicle.",
                                   ),
                                 ],
                               ),
@@ -121,7 +121,7 @@ class _InfoPageState extends State<InfoPage> {
                                 children: [
                                   TextSpan(
                                     text:
-                                        "Then Using Distance we calculate Battery percentage and travelling cost ",
+                                        "Then Using Distance we calculate Battery percentage and traveling cost.",
                                   ),
                                   // WidgetSpan(
                                   //   child: Icon(LineIcons.mapMarker, size: 14),
@@ -191,7 +191,7 @@ class _InfoPageState extends State<InfoPage> {
                           children: [
                             TextSpan(
                               text:
-                                  "Depending on Phone Hardware Application can give False reading 😕",
+                                  "Depending on Phone Hardware Application can give False reading 😕.",
                             ),
                           ],
                         ),
@@ -218,7 +218,7 @@ class _InfoPageState extends State<InfoPage> {
                           children: [
                             TextSpan(
                               text:
-                                  "Values provided by application are just for reference purposes",
+                                  "Values provided by application are just for reference purposes.",
                             ),
                           ],
                         ),
