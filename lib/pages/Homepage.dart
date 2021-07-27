@@ -177,7 +177,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         _positionStreamSubscription!.resume();
         _startForegroundTask();
       } else {
-        // icon = false;
+        icon = false;
         _pressInput?.value = false;
         print('inside _positionStreamSubscription.resume');
         _positionStreamSubscription!.pause();
@@ -418,7 +418,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     setState(() {
                       _pressInput?.value = false;
                       distancefind = 0.0;
-                      batteryUsed = 0.00;
+                      batteryUsed = 0.0;
                       icon = false;
                       speedCheck = "Still";
                       _positionStreamSubscription!.pause();
@@ -475,9 +475,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               SizedBox(
                 width: 8,
               ),
-              FloatingActionButton(
+              FloatingActionButton.extended(
                 backgroundColor: Color(0xFF03ADC6),
-                child: (_positionStreamSubscription == null ||
+                label: (_positionStreamSubscription == null ||
+                        _positionStreamSubscription!.isPaused)
+                    ? Text("Start", style: TextStyle(fontSize: 16))
+                    : Text("Pause", style: TextStyle(fontSize: 16)),
+                icon: (_positionStreamSubscription == null ||
                         _positionStreamSubscription!.isPaused)
                     ? Icon(Icons.play_arrow)
                     : Icon(Icons.pause),
@@ -530,9 +534,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         });
                         _stopForegroundTask();
                       },
-                      child: FloatingActionButton(
+                      child: FloatingActionButton.extended(
+                        label: Text("Stop", style: TextStyle(fontSize: 16)),
                         backgroundColor: Colors.red,
-                        child: Icon(Icons.stop),
+                        icon: Icon(Icons.stop),
                         onPressed: () {
                           showDialog(
                             context: context,

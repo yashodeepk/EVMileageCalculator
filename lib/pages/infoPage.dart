@@ -47,7 +47,7 @@ class _InfoPageState extends State<InfoPage> {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                             child: Text(
-                              "How MileageCalculator Works😕?",
+                              "How MileageCalculator Works🤔?",
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.w600),
                               textAlign: TextAlign.left,
@@ -191,7 +191,7 @@ class _InfoPageState extends State<InfoPage> {
                           children: [
                             TextSpan(
                               text:
-                                  "Depending on Phone Hardware Application can give False reading 😟",
+                                  "Depending on Phone Hardware Application can give False reading 😕",
                             ),
                           ],
                         ),
