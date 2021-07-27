@@ -31,8 +31,8 @@ void callback() {
   // int updateCount = 0;
 
   FlutterForegroundTask.initDispatcher((timestamp) async {
-    final strTimestamp = timestamp.toString();
-    print('Calculating Distance - Time: $strTimestamp');
+    // final strTimestamp = timestamp.toString();
+    // print('Calculating Distance - Time: $strTimestamp');
 
     FlutterForegroundTask.update(
       notificationTitle: 'Calculating Distance',
@@ -92,7 +92,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         iconData: NotificationIconData(
           resType: ResourceType.mipmap,
           resPrefix: ResourcePrefix.ic,
-          name: 'launcher',
+          name: 'launcher_foreground',
         ),
       ),
       foregroundTaskOptions: ForegroundTaskOptions(
@@ -116,7 +116,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   }
 
   Future<void> _toggleListening() async {
-    distancefind = 0.0;
+    // distancefind = 0.0;
     print("In Function");
     if (_positionStreamSubscription == null) {
       print("In Function if");
@@ -152,6 +152,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             speedcheck = false;
             speedCheck = "Walking";
           } else {
+            speedcheck = false;
             speedCheck = "Standing";
           }
         });
@@ -176,7 +177,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         _positionStreamSubscription!.resume();
         _startForegroundTask();
       } else {
-        icon = false;
+        // icon = false;
         _pressInput?.value = false;
         print('inside _positionStreamSubscription.resume');
         _positionStreamSubscription!.pause();
@@ -396,7 +397,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 width: 15,
               ),
               TextButton(
-                  child: Text("Save"),
+                  child:
+                      Text("Save", style: TextStyle(color: Color(0xff03adc6))),
                   onPressed: () {
                     db.insertData(DataModel(
                         title: titleController.text,
@@ -425,7 +427,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     Navigator.of(context).pop();
                   }),
               TextButton(
-                  child: Text("cancel"),
+                  child: Text("cancel",
+                      style: TextStyle(color: Color(0xff03adc6))),
                   onPressed: () {
                     Navigator.of(context).pop();
                   }),

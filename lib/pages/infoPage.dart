@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
-// import 'package:currency_picker/currency_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InfoPage extends StatefulWidget {
@@ -11,14 +10,6 @@ class InfoPage extends StatefulWidget {
 }
 
 class _InfoPageState extends State<InfoPage> {
-  int flagOffset = 0x1F1E6;
-  int asciiOffset = 0x41;
-
-  final codeToCountryEmoji = (code) {
-    final char1 = code.codeUnitAt(0) - 0x41 + 0x1F1E6;
-    final char2 = code.codeUnitAt(1) - 0x41 + 0x1F1E6;
-    return String.fromCharCode(char1) + String.fromCharCode(char2);
-  };
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -188,9 +179,9 @@ class _InfoPageState extends State<InfoPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                      padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                       width: MediaQuery.of(context).size.width,
-                      height: 80,
+                      height: 43,
                       child: RichText(
                         maxLines: 3, textScaleFactor: 1.3,
                         overflow: TextOverflow.ellipsis,
@@ -201,6 +192,33 @@ class _InfoPageState extends State<InfoPage> {
                             TextSpan(
                               text:
                                   "Depending on Phone Hardware Application can give False reading 😟",
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 8, 0),
+                      width: MediaQuery.of(context).size.width,
+                      height: 43,
+                      child: RichText(
+                        maxLines: 3, textScaleFactor: 1.3,
+                        overflow: TextOverflow.ellipsis,
+                        // textDirection: TextDirection.rtl,
+                        // textAlign: TextAlign.justify,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text:
+                                  "Values provided by application are just for reference purposes",
                             ),
                           ],
                         ),
@@ -282,6 +300,13 @@ class _InfoPageState extends State<InfoPage> {
                                         color: Colors.white,
                                         size: 32,
                                       )),
+                                  IconButton(
+                                      onPressed: _instagramyashodeep,
+                                      icon: Icon(
+                                        LineIcons.instagram,
+                                        color: Colors.purpleAccent,
+                                        size: 32,
+                                      )),
                                 ],
                               ),
                             ],
@@ -353,6 +378,13 @@ class _InfoPageState extends State<InfoPage> {
                                         color: Colors.white,
                                         size: 32,
                                       )),
+                                  IconButton(
+                                      onPressed: _instagrampranav,
+                                      icon: Icon(
+                                        LineIcons.instagram,
+                                        color: Colors.purpleAccent,
+                                        size: 32,
+                                      )),
                                 ],
                               ),
                             ],
@@ -394,6 +426,10 @@ class _InfoPageState extends State<InfoPage> {
   void _githubpranav() async => await canLaunch('https://github.com/Pranavmaid')
       ? await launch('https://github.com/Pranavmaid')
       : throw 'Faild to launch';
+  void _instagrampranav() async =>
+      await canLaunch('https://www.instagram.com/pranav_222000/?hl=en')
+          ? await launch('https://www.instagram.com/pranav_222000/?hl=en')
+          : throw 'Faild to launch';
 
   void _linkedinyashodeep() async => await canLaunch(
           'https://www.linkedin.com/in/yashodeep-kacholiya-84904911b/')
@@ -403,5 +439,9 @@ class _InfoPageState extends State<InfoPage> {
   void _githubyashodeep() async =>
       await canLaunch('https://github.com/yashodeepk')
           ? await launch('https://github.com/yashodeepk')
+          : throw 'Faild to launch';
+  void _instagramyashodeep() async =>
+      await canLaunch('https://www.instagram.com/yashodeep_kacholiya/?hl=en')
+          ? await launch('https://www.instagram.com/yashodeep_kacholiya/?hl=en')
           : throw 'Faild to launch';
 }
