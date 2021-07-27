@@ -232,7 +232,11 @@ class _CompareWidgetState extends State<CompareWidget> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text(
+          "Edit",
+          style: TextStyle(fontSize: 16),
+        ),
         onPressed: () {
           Navigator.push(
             context,
@@ -244,7 +248,7 @@ class _CompareWidgetState extends State<CompareWidget> {
           );
         },
         backgroundColor: Color(0xFF03ADC6),
-        child: Icon(Icons.mode_edit),
+        icon: Icon(Icons.mode_edit),
       ),
     );
   }
