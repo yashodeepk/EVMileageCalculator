@@ -31,8 +31,8 @@ void callback() {
   // int updateCount = 0;
 
   FlutterForegroundTask.initDispatcher((timestamp) async {
-    final strTimestamp = timestamp.toString();
-    print('Calculating Distance - Time: $strTimestamp');
+    // final strTimestamp = timestamp.toString();
+    // print('Calculating Distance - Time: $strTimestamp');
 
     FlutterForegroundTask.update(
       notificationTitle: 'Calculating Distance',
@@ -92,7 +92,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         iconData: NotificationIconData(
           resType: ResourceType.mipmap,
           resPrefix: ResourcePrefix.ic,
-          name: 'launcher',
+          name: 'launcher_foreground',
         ),
       ),
       foregroundTaskOptions: ForegroundTaskOptions(
@@ -116,7 +116,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   }
 
   Future<void> _toggleListening() async {
-    distancefind = 0.0;
+    // distancefind = 0.0;
     print("In Function");
     if (_positionStreamSubscription == null) {
       print("In Function if");
@@ -152,6 +152,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             speedcheck = false;
             speedCheck = "Walking";
           } else {
+            speedcheck = false;
             speedCheck = "Standing";
           }
         });
@@ -396,7 +397,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 width: 15,
               ),
               TextButton(
-                  child: Text("Save"),
+                  child:
+                      Text("Save", style: TextStyle(color: Color(0xff03adc6))),
                   onPressed: () {
                     db.insertData(DataModel(
                         title: titleController.text,
@@ -416,7 +418,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     setState(() {
                       _pressInput?.value = false;
                       distancefind = 0.0;
-                      batteryUsed = 0.00;
+                      batteryUsed = 0.0;
                       icon = false;
                       speedCheck = "Still";
                       _positionStreamSubscription!.pause();
@@ -425,7 +427,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     Navigator.of(context).pop();
                   }),
               TextButton(
-                  child: Text("cancel"),
+                  child: Text("cancel",
+                      style: TextStyle(color: Color(0xff03adc6))),
                   onPressed: () {
                     Navigator.of(context).pop();
                   }),
@@ -472,9 +475,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               SizedBox(
                 width: 8,
               ),
-              FloatingActionButton(
+              FloatingActionButton.extended(
                 backgroundColor: Color(0xFF03ADC6),
-                child: (_positionStreamSubscription == null ||
+                label: (_positionStreamSubscription == null ||
+                        _positionStreamSubscription!.isPaused)
+                    ? Text("Start", style: TextStyle(fontSize: 16))
+                    : Text("Pause", style: TextStyle(fontSize: 16)),
+                icon: (_positionStreamSubscription == null ||
                         _positionStreamSubscription!.isPaused)
                     ? Icon(Icons.play_arrow)
                     : Icon(Icons.pause),
@@ -527,9 +534,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         });
                         _stopForegroundTask();
                       },
-                      child: FloatingActionButton(
+                      child: FloatingActionButton.extended(
+                        label: Text("Stop", style: TextStyle(fontSize: 16)),
                         backgroundColor: Colors.red,
-                        child: Icon(Icons.stop),
+                        icon: Icon(Icons.stop),
                         onPressed: () {
                           showDialog(
                             context: context,
