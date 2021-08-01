@@ -111,6 +111,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_admob_app_open:
+    dependency: "direct main"
+    description:
+      name: flutter_admob_app_open
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.5"
   flutter_foreground_task:
     dependency: "direct main"
     description:
@@ -156,6 +163,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  google_mobile_ads:
+    dependency: "direct main"
+    description:
+      name: google_mobile_ads
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.13.2+1"
   graphs:
     dependency: transitive
     description:
