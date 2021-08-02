@@ -88,9 +88,8 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
   }
 
   Future<void> setDatatoSP() async {
-    if (distanceUnit!.toString().isNotEmpty ||
-        logo.name.toString().isNotEmpty) {
-      if (distanceUnit!.toString() != dropdownValue ||
+    if (distanceUnit != null && logo != null) {
+      if (distanceUnit.toString() != dropdownValue ||
           logo.name != Currency.from(json: jsonDecode(selectcurrency)).name) {
         print("Is not empty");
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
