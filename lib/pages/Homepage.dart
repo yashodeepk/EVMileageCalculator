@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:mileagecalculator/Database/datamodel.dart';
 import 'package:mileagecalculator/pages/infoPage.dart';
@@ -12,6 +13,8 @@ import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+
+import '../adMobHelper.dart';
 
 bool? icon = false;
 bool start = false;
@@ -51,6 +54,7 @@ void callback() {
 }
 
 class _HomePageWidgetState extends State<HomePageWidget> {
+  AdMobHelper adhelper = new AdMobHelper();
   bool get isPlaying => _controller.isActive;
 
   bool button = false;
@@ -216,6 +220,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     _bikeRiveFile();
     _determinePosition();
     db = DB();
+    adhelper.createInterAd();
   }
 
   Future<Position> _determinePosition() async {
@@ -424,6 +429,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       _positionStreamSubscription!.pause();
                     });
                     _stopForegroundTask();
+                    adhelper.showInterAd();
                     Navigator.of(context).pop();
                   }),
               TextButton(
@@ -533,6 +539,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           _positionStreamSubscription!.pause();
                         });
                         _stopForegroundTask();
+                        adhelper.showInterAd();
                       },
                       child: FloatingActionButton.extended(
                         label: Text("Stop", style: TextStyle(fontSize: 16)),

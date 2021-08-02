@@ -1,7 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mileagecalculator/adMobHelper.dart';
 import 'package:mileagecalculator/pages/Homepage.dart';
 import 'package:mileagecalculator/pages/Savings.dart';
 import 'package:mileagecalculator/pages/WelcomePage.dart';
@@ -12,6 +12,7 @@ import 'package:mileagecalculator/Database/database.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  AdMobHelper.initialization();
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   trip_name = prefs.getString('trip_name');
@@ -25,6 +26,7 @@ Future<void> main() async {
   petrolVehicalMileage = prefs.getString('petrol_Vehical_Mileage');
   selectcurrency = prefs.getString('select_currency');
   distanceUnit = prefs.getString('distanceUnit');
+
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(MyApp());
@@ -36,7 +38,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'EV Mileage Calculator',
       theme: ThemeData.dark(),
       //home: MyHomePage(),
       home: SplashScreen.navigate(
@@ -61,6 +63,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int selectedPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Future<bool> _onWillPop() async {
     return (await showDialog(
