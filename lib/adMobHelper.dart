@@ -2,6 +2,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdMobHelper {
   static String get bannerUnitID => 'ca-app-pub-3940256099942544/6300978111';
+  static String get InterstitialUnitID =>
+      'ca-app-pub-3940256099942544/1033173712';
 
   InterstitialAd? _interstitialAd;
 
@@ -32,7 +34,7 @@ class AdMobHelper {
 
   void createInterAd() {
     InterstitialAd.load(
-      adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+      adUnitId: InterstitialUnitID,
       request: AdRequest(),
       adLoadCallback:
           InterstitialAdLoadCallback(onAdLoaded: (InterstitialAd ad) {
