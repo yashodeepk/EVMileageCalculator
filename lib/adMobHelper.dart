@@ -1,0 +1,55 @@
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
+class AdMobHelper {
+  static String get interstitialUnitId => '';
+
+  InterstitialAd? _interstitialAd;
+
+  int num_of_attempt_load = 0;
+
+  static initialization() {
+    if (MobileAds.instance == null) {
+      MobileAds.instance.initialize();
+    }
+  }
+
+  void createInterAd() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+      request: AdRequest(),
+      adLoadCallback:
+          InterstitialAdLoadCallback(onAdLoaded: (InterstitialAd ad) {
+        _interstitialAd = ad;
+        num_of_attempt_load = 0;
+      }, onAdFailedToLoad: (LoadAdError error) {
+        num_of_attempt_load += 1;
+        _interstitialAd = null;
+        if (num_of_attempt_load <= 2) {
+          createInterAd();
+        }
+      }),
+    );
+  }
+
+  void showInterAd() {
+    if (_interstitialAd == null) {
+      return;
+    }
+
+    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdShowedFullScreenContent: (InterstitialAd ad) {
+      print("More Money added");
+    }, onAdDismissedFullScreenContent: (InterstitialAd ad) {
+      print("No money...");
+      ad.dispose();
+    }, onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+      print("Ad mob not giving money because " + error.toString());
+      ad.dispose();
+      createInterAd();
+    });
+
+    _interstitialAd!.show();
+
+    _interstitialAd = null;
+  }
+}

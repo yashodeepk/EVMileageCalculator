@@ -1,21 +1,18 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mileagecalculator/pages/Homepage.dart';
 import 'package:mileagecalculator/pages/Savings.dart';
 import 'package:mileagecalculator/pages/WelcomePage.dart';
 import 'package:mileagecalculator/pages/analaticsPage.dart';
-import 'package:native_admob_flutter/native_admob_flutter.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mileagecalculator/Database/database.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await MobileAds.initialize();
-
-  MobileAds.setTestDeviceIds(['7B47846B1B1C2CF74D04995FD4E4E56C']);
+  MobileAds.instance.initialize();
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   trip_name = prefs.getString('trip_name');
@@ -67,20 +64,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int selectedPage = 0;
 
-  void getOpenAppAd() async {
-    final AppOpenAd appOpenAd = AppOpenAd();
-    if (!appOpenAd.isAvailable) {
-      await appOpenAd.load(unitId: 'ca-app-pub-9575384856484892/9955485996');
-    }
-    if (appOpenAd.isAvailable) {
-      await appOpenAd.show();
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    getOpenAppAd();
   }
 
   Future<bool> _onWillPop() async {

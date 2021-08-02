@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:mileagecalculator/Database/database.dart';
 import 'package:mileagecalculator/Database/datamodel.dart';
+import 'package:mileagecalculator/adMobHelper.dart';
 import 'package:mileagecalculator/pages/datapage.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:currency_picker/currency_picker.dart';
@@ -23,6 +24,7 @@ class _AnalaticsState extends State<Analatics> {
   var avgCost = 0.00;
   var avgSavings = 0.00;
   var tripCount = 0;
+  AdMobHelper adMobHelper = new AdMobHelper();
 
   List<Color> gradientColors = [
     const Color(0xFF03ADC6),
@@ -41,6 +43,8 @@ class _AnalaticsState extends State<Analatics> {
     } else {
       logo.symbol = '₹';
     }
+
+    adMobHelper.createInterAd();
   }
 
   List<FlSpot> convetDataModelToFlSpot() {
@@ -146,6 +150,7 @@ class _AnalaticsState extends State<Analatics> {
                           primary: Color(0xFF03DAC6),
                         ),
                         onPressed: () {
+                          adMobHelper.showInterAd();
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => DataPage()),
