@@ -30,14 +30,6 @@ Future<void> main() async {
   selectcurrency = prefs.getString('select_currency');
   distanceUnit = prefs.getString('distanceUnit');
 
-  final AppOpenAd appOpenAd = AppOpenAd();
-  if (!appOpenAd.isAvailable) {
-    await appOpenAd.load(unitId: 'ca-app-pub-9575384856484892/9955485996');
-  }
-  if (appOpenAd.isAvailable) {
-    await appOpenAd.show();
-  }
-
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(MyApp());
@@ -49,7 +41,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'EV Mileage Calculator',
       theme: ThemeData.dark(),
       //home: MyHomePage(),
       home: SplashScreen.navigate(
@@ -74,6 +66,22 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int selectedPage = 0;
+
+  void getOpenAppAd() async {
+    final AppOpenAd appOpenAd = AppOpenAd();
+    if (!appOpenAd.isAvailable) {
+      await appOpenAd.load(unitId: 'ca-app-pub-9575384856484892/9955485996');
+    }
+    if (appOpenAd.isAvailable) {
+      await appOpenAd.show();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getOpenAppAd();
+  }
 
   Future<bool> _onWillPop() async {
     return (await showDialog(
