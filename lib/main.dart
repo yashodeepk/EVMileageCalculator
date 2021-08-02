@@ -6,13 +6,16 @@ import 'package:mileagecalculator/pages/Homepage.dart';
 import 'package:mileagecalculator/pages/Savings.dart';
 import 'package:mileagecalculator/pages/WelcomePage.dart';
 import 'package:mileagecalculator/pages/analaticsPage.dart';
+import 'package:native_admob_flutter/native_admob_flutter.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mileagecalculator/Database/database.dart';
-import 'package:flutter_admob_app_open/flutter_admob_app_open.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await MobileAds.initialize();
+
+  MobileAds.setTestDeviceIds(['7B47846B1B1C2CF74D04995FD4E4E56C']);
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   trip_name = prefs.getString('trip_name');
@@ -27,23 +30,13 @@ Future<void> main() async {
   selectcurrency = prefs.getString('select_currency');
   distanceUnit = prefs.getString('distanceUnit');
 
-  /// Replace your admob app ID
-  final admobAppId = "ca-app-pub-9575384856484892~3581649331";
-
-  /// Replace your admob app open ad unit id
-  final appAppOpenAdUnitId = "ca-app-pub-9575384856484892/9955485996";
-
-  AdRequestAppOpen targetingInfo = AdRequestAppOpen(
-    keywords: <String>['flutterio', 'beautiful apps'],
-    contentUrl: 'https://flutter.io',
-    nonPersonalizedAds: true,
-  );
-
-  await FlutterAdmobAppOpen.instance.initialize(
-    appId: admobAppId,
-    appAppOpenAdUnitId: appAppOpenAdUnitId,
-    targetingInfo: targetingInfo,
-  );
+  final AppOpenAd appOpenAd = AppOpenAd();
+  if (!appOpenAd.isAvailable) {
+    await appOpenAd.load(unitId: 'ca-app-pub-9575384856484892/9955485996');
+  }
+  if (appOpenAd.isAvailable) {
+    await appOpenAd.show();
+  }
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
