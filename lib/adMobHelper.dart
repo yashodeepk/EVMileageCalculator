@@ -1,11 +1,13 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdMobHelper {
-  static String get bannerUnitID => 'ca-app-pub-3940256099942544/6300978111';
-  //production if => ca-app-pub-9575384856484892/4173456520
+  static String get bannerUnitID => //'ca-app-pub-3940256099942544/6300978111';
+      //production if =>
+      'ca-app-pub-9575384856484892/4173456520';
   static String get interstitialUnitID =>
-      'ca-app-pub-3940256099942544/1033173712';
-  //profuction id => ca-app-pub-9575384856484892/7284843207
+      //  'ca-app-pub-3940256099942544/1033173712';
+      //profuction id =>
+      'ca-app-pub-9575384856484892/7284843207';
   InterstitialAd? _interstitialAd;
 
   int num_of_attempt_load = 0;
