@@ -146,7 +146,7 @@ class _CompareWidgetState extends State<CompareWidget> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.fromLTRB(20, 150, 20, 10),
+                padding: EdgeInsets.fromLTRB(20, 200, 20, 10),
                 child: ListView(
                   children: datas.map((trip) {
                     return Container(
