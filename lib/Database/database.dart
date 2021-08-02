@@ -52,4 +52,9 @@ class DB {
     final Database db = await initDB();
     return await db.delete("TRIPTable", where: "id = ?", whereArgs: [id]);
   }
+
+  Future<void> deleteAll() async {
+    final Database db = await initDB();
+    await db.delete("TRIPTable");
+  }
 }

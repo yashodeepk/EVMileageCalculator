@@ -144,10 +144,18 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               startlongitude = position.longitude;
             } else {
               print("in else");
-              distancefind = distancefind! +
-                  Geolocator.distanceBetween(startlatitude, startlongitude,
-                          position.latitude, position.longitude) /
-                      1000;
+              if (distanceUnit == "Miles") {
+                distancefind = distancefind! +
+                    (Geolocator.distanceBetween(startlatitude, startlongitude,
+                                position.latitude, position.longitude) /
+                            1000) *
+                        0.62137119;
+              } else {
+                distancefind = distancefind! +
+                    Geolocator.distanceBetween(startlatitude, startlongitude,
+                            position.latitude, position.longitude) /
+                        1000;
+              }
               batteryUsed =
                   (distancefind! / double.parse(batteryCapacity)) * 100;
               startlatitude = position.latitude;

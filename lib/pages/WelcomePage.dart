@@ -29,6 +29,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   String select = "Select";
   var logo;
+  DB db = new DB();
   String dropdownValue = "Km";
   final _form = GlobalKey<FormState>();
   void getSPData() async {
@@ -86,7 +87,30 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
     getSPData();
   }
 
-  void setDatatoSP() async {
+  Future<void> setDatatoSP() async {
+    if (distanceUnit!.toString().isNotEmpty ||
+        logo.name.toString().isNotEmpty) {
+      if (distanceUnit!.toString() != dropdownValue ||
+          logo.name != Currency.from(json: jsonDecode(selectcurrency)).name) {
+        print("Is not empty");
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text(
+            "Possible loss of Stored data...",
+            style: TextStyle(color: Colors.white),
+          ),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.red,
+          margin: EdgeInsets.fromLTRB(20.0, 0, 20.0, 60.0),
+          action: SnackBarAction(
+            label: 'CLOSE',
+            textColor: Colors.white,
+            onPressed: ScaffoldMessenger.of(context).hideCurrentSnackBar,
+          ),
+        ));
+        await db.deleteAll();
+      }
+    }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('battery_Capacity', batteryCapacityController.text);
     print("Battery is " + batteryCapacityController.text);
@@ -214,6 +238,9 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                                 currency.symbol;
 
                                             logo = currency;
+                                            petrolPrizeController.text = "";
+                                            electricityPriceController.text =
+                                                "";
                                           });
                                           print(
                                               'Select currency: ${currency.name}');
@@ -283,6 +310,9 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                       onChanged: (String? newValue) {
                                         setState(() {
                                           dropdownValue = newValue!;
+                                          batteryCapacityController.text = "";
+                                          petrolVehicalMileageController.text =
+                                              "";
                                         });
                                       },
                                       items: <String>['Km', 'Miles']
@@ -752,12 +782,13 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(24))),
                         child: TextButton.icon(
-                          onPressed: () {
+                          onPressed: () async {
                             if (_form.currentState!.validate()) {
                               if (logo != null) {
-                                setDatatoSP();
+                                await setDatatoSP();
                                 print("set prefrence");
                                 if (!widget.fromMainPage) {
+                                  print('reload');
                                   widget.reload();
                                   Navigator.of(context).pop();
                                 } else {
