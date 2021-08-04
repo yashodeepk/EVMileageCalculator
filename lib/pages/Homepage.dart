@@ -41,7 +41,7 @@ void callback() {
       notificationTitle: 'Calculating Distance',
       notificationText: 'Distance: ' +
           distancefind!.toStringAsFixed(1) +
-          distanceUnit.toString() +
+          distanceUnit +
           ' ' +
           ' Battery used: ' +
           batteryUsed!.toStringAsFixed(1) +
