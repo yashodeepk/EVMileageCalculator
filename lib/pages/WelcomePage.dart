@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -81,10 +82,66 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
     }
   }
 
+  AlertDialog prominantDisclosure(context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(32.0))),
+        title: Center(
+            child: Text(
+          "Background Location Access",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          textAlign: TextAlign.center,
+        )),
+        content: Container(
+          height: 300,
+          child: Column(
+            children: [
+              CircleAvatar(
+                backgroundImage: AssetImage('assets/locationIcon.png'),
+                radius: 75,
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              Text(
+                "EV Mileage Calculator collects location data in background to enable the calculation of real-time battery usage even when app is closed",
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: 15,
+              ),
+              TextButton(
+                  child: Text("OK", style: TextStyle(color: Color(0xff03adc6))),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+            ],
+          ),
+        ],
+      );
+
   @override
   void initState() {
     super.initState();
     getSPData();
+    Timer.run(() => prominantDis());
+  }
+
+  void prominantDis() async {
+    if (widget.fromMainPage) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return prominantDisclosure(context);
+        },
+      );
+    }
   }
 
   Future<void> setDatatoSP() async {
