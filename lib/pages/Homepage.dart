@@ -165,7 +165,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               }
 
               batteryUsed = (distancefind! /
-                      (double.parse(batteryCapacity) * (0.875 * (x) + 1))) *
+                      (double.parse(batteryCapacity) * (1 - (0.025 * x)))) *
                   100;
               startlatitude = position.latitude;
               startlongitude = position.longitude;
