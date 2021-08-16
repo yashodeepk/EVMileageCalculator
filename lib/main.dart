@@ -26,7 +26,7 @@ Future<void> main() async {
   petrolVehicalMileage = prefs.getString('petrol_Vehical_Mileage');
   selectcurrency = prefs.getString('select_currency');
   distanceUnit = prefs.getString('distanceUnit');
-
+  usedYears = prefs.getString('usedYears');
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(MyApp());

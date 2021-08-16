@@ -13,6 +13,7 @@ var petrolVehicalMileage;
 var selectcurrency;
 var totalDistance;
 var distanceUnit;
+var usedYears;
 
 class DB {
   Future<Database> initDB() async {

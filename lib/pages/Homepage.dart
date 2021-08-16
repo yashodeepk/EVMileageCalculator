@@ -84,6 +84,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   late double startlongitude;
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
   final _form = GlobalKey<FormState>();
+  late double x;
 
   void _initForegroundTask() {
     FlutterForegroundTask.init(
@@ -105,6 +106,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       ),
       printDevLog: true,
     );
+  }
+
+  int daysBetween(DateTime from, DateTime to) {
+    from = DateTime(from.year, from.month, from.day);
+    to = DateTime(to.year, to.month, to.day);
+    return (to.difference(from).inHours / 24).round();
   }
 
   void _startForegroundTask() {
@@ -155,8 +162,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             position.latitude, position.longitude) /
                         1000;
               }
-              batteryUsed =
-                  (distancefind! / double.parse(batteryCapacity)) * 100;
+
+              batteryUsed = (distancefind! /
+                      (double.parse(batteryCapacity) * (0.875 * (x) + 1))) *
+                  100;
               startlatitude = position.latitude;
               startlongitude = position.longitude;
             }
@@ -524,6 +533,18 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         'Location permissions are permanently denied, we cannot request permissions.');
                   } else {
                     print("Pressed");
+                    x = double.parse((daysBetween(
+                                DateTime(
+                                    int.parse(
+                                        usedYears.split(' ')[0].split('-')[0]),
+                                    int.parse(
+                                        usedYears.split(' ')[0].split('-')[1]),
+                                    int.parse(
+                                        usedYears.split(' ')[0].split('-')[2])),
+                                DateTime.now()) /
+                            365)
+                        .toString());
+                    print("X is " + x.toString());
                     setState(() {
                       // icon = true;
                     });

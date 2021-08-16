@@ -29,8 +29,10 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
       TextEditingController();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   String select = "Select";
+  String date = "";
   var logo;
   DB db = new DB();
+  DateTime selectedDate = DateTime.now();
   String dropdownValue = "Km";
   final _form = GlobalKey<FormState>();
   void getSPData() async {
@@ -42,6 +44,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
     petrolVehicalMileage = prefs.getString('petrol_Vehical_Mileage');
     selectcurrency = prefs.getString('select_currency');
     distanceUnit = prefs.getString('distanceUnit');
+    usedYears = prefs.getString('usedYears');
     if (batteryCapacity != null) {
       setState(() {
         batteryCapacityController.text = batteryCapacity;
@@ -74,12 +77,35 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
       });
     }
 
+    if (usedYears != null) {
+      print("Used Years are " + usedYears);
+      date = usedYears.split(' ')[0];
+      print("Date is " + date);
+      setState(() {
+        selectedDate = DateTime(int.parse(date.split('-')[0]),
+            int.parse(date.split('-')[1]), int.parse(date.split('-')[2]));
+      });
+    }
+
     if (selectcurrency != null) {
       setState(() {
         logo = Currency.from(json: jsonDecode(selectcurrency));
         select = logo.name + " " + logo.symbol;
       });
     }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000, 1),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
   }
 
   AlertDialog prominantDisclosure(context) => AlertDialog(
@@ -190,6 +216,9 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
     prefs.setString('batteryCap', batteryCapController.text);
     batteryCap = batteryCapController.text;
     print('Battery Capacity is ' + batteryCap);
+    prefs.setString('usedYears', selectedDate.toString());
+    usedYears = selectedDate.toString();
+    print('Battery installed date is ' + usedYears);
     selectcurrency = user;
   }
 
@@ -379,6 +408,59 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                           child: Text(value),
                                         );
                                       }).toList(),
+                                    ),
+                                  ),
+                                ),
+                              )),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width / 2,
+                            child: Center(
+                              child: Tooltip(
+                                message:
+                                    'Date on which latest battery was installed',
+                                showDuration: Duration(seconds: 3),
+                                child: Text(
+                                  'Battery Installation date',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                              width: MediaQuery.of(context).size.width / 2,
+                              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                              child: Center(
+                                child: Container(
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  decoration: BoxDecoration(
+                                      color: Color(0xff03adc6).withOpacity(0.7),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(24))),
+                                  child: TextButton(
+                                    onPressed: () => _selectDate(context),
+                                    child: Center(
+                                      child: AutoSizeText(
+                                        "${selectedDate.toLocal()}"
+                                            .split(' ')[0],
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -890,6 +972,9 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: 50,
+                    )
                   ],
                 ),
               ),
