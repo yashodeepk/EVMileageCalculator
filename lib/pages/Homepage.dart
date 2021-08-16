@@ -116,7 +116,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   void _startForegroundTask() {
     FlutterForegroundTask.start(
-      notificationTitle: 'Trip started, Calculating distance...',
+      notificationTitle:
+          'Distance: $distancefind $distanceUnit 🧭 Battery Used: $batteryUsed % 🔋',
       notificationText: 'Tap to return to the app',
       callback: callback,
     );
