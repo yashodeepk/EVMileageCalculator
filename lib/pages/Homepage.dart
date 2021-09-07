@@ -238,7 +238,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     _bikeRiveFile();
     _determinePosition();
     db = DB();
-    adhelper.createInterAd();
+    //adhelper.createInterAd();
   }
 
   Future<Position> _determinePosition() async {
@@ -447,7 +447,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       _positionStreamSubscription!.pause();
                     });
                     _stopForegroundTask();
-                    adhelper.showInterAd();
+                    //adhelper.showInterAd();
                     Navigator.of(context).pop();
                   }),
               TextButton(
