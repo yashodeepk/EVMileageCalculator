@@ -1,7 +1,7 @@
 name: mileagecalculator
 description: helps to calculate your EV mileage.
 publish_to: 'none'
-version: 1.0.4+5
+version: 1.0.4+6
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
