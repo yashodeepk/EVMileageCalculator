@@ -511,9 +511,9 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               controller: batteryCapacityController,
                               obscureText: false,
                               decoration: InputDecoration(
-                                hintText: dropdownValue.toString(),
+                                hintText: "100 " + dropdownValue.toString(),
                                 hintStyle: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.grey,
                                   fontSize: 17,
                                 ),
                                 enabledBorder: UnderlineInputBorder(
@@ -596,9 +596,9 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               controller: batteryCapController,
                               obscureText: false,
                               decoration: InputDecoration(
-                                hintText: 'KWH',
+                                hintText: '2.4 KWH',
                                 hintStyle: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.grey,
                                   fontSize: 17,
                                 ),
                                 enabledBorder: UnderlineInputBorder(
@@ -684,9 +684,10 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               controller: electricityPriceController,
                               obscureText: false,
                               decoration: InputDecoration(
-                                hintText: logo != null ? logo.symbol : '₹',
+                                hintText:
+                                    logo != null ? "5 " + logo.symbol : "₹ 5",
                                 hintStyle: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.grey,
                                   fontSize: 18,
                                 ),
                                 enabledBorder: UnderlineInputBorder(
@@ -771,9 +772,11 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               controller: petrolPrizeController,
                               obscureText: false,
                               decoration: InputDecoration(
-                                hintText: logo != null ? logo.symbol : '₹',
+                                hintText: logo != null
+                                    ? "100 " + logo.symbol
+                                    : "₹ 100",
                                 hintStyle: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.grey,
                                   fontSize: 18,
                                 ),
                                 enabledBorder: UnderlineInputBorder(
@@ -858,9 +861,10 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               controller: petrolVehicalMileageController,
                               obscureText: false,
                               decoration: InputDecoration(
-                                hintText: dropdownValue.toString() + '/Ltr',
+                                hintText:
+                                    '40 ' + dropdownValue.toString() + '/Ltr',
                                 hintStyle: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.grey,
                                   fontSize: 17,
                                 ),
                                 enabledBorder: UnderlineInputBorder(
