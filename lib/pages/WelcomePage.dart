@@ -480,8 +480,11 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                 message: 'Range of your EV on 100% charge',
                                 showDuration: Duration(seconds: 3),
                                 child: Text(
-                                  'EV Full Range',
-                                  textAlign: TextAlign.start,
+                                  'EV Full Range (' +
+                                      dropdownValue.toString() +
+                                      ')',
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 17,
@@ -511,7 +514,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               controller: batteryCapacityController,
                               obscureText: false,
                               decoration: InputDecoration(
-                                hintText: "100 " + dropdownValue.toString(),
+                                hintText: "100 ",
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 17,
@@ -564,9 +567,10 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               child: Tooltip(
                                 message: "Your EV's battery capacity in KWH",
                                 showDuration: Duration(seconds: 3),
-                                child: Text(
-                                  'EV Battery Capacity',
-                                  textAlign: TextAlign.start,
+                                child: AutoSizeText(
+                                  'EV Battery Capacity (KWH)',
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 17,
@@ -596,7 +600,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               controller: batteryCapController,
                               obscureText: false,
                               decoration: InputDecoration(
-                                hintText: '2.4 KWH',
+                                hintText: '2.4',
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 17,
@@ -652,9 +656,13 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                     'Unit price of electicity in your area',
                                 showDuration: Duration(seconds: 3),
                                 child: AutoSizeText(
-                                  ' Electricity Unit Price ',
-                                  maxLines: 1,
-                                  textAlign: TextAlign.start,
+                                  logo != null
+                                      ? "Electricty Unit Price (" +
+                                          logo.symbol +
+                                          ")"
+                                      : "Electricty Unit Price (₹)",
+                                  maxLines: 2,
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 17,
@@ -684,8 +692,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               controller: electricityPriceController,
                               obscureText: false,
                               decoration: InputDecoration(
-                                hintText:
-                                    logo != null ? "5 " + logo.symbol : "₹ 5",
+                                hintText: "5",
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 18,
@@ -740,9 +747,12 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                 message:
                                     'Per litre price of petrol in your area',
                                 showDuration: Duration(seconds: 3),
-                                child: Text(
-                                  'Petrol Price',
-                                  textAlign: TextAlign.start,
+                                child: AutoSizeText(
+                                  logo != null
+                                      ? "Petrol Price (" + logo.symbol + ")"
+                                      : "Petrol Price (₹)",
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 17,
@@ -772,9 +782,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               controller: petrolPrizeController,
                               obscureText: false,
                               decoration: InputDecoration(
-                                hintText: logo != null
-                                    ? "100 " + logo.symbol
-                                    : "₹ 100",
+                                hintText: "100",
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 18,
@@ -829,9 +837,11 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                                     'Distance covered by the petrol vehicle in 1 litre of petrol',
                                 showDuration: Duration(seconds: 3),
                                 child: AutoSizeText(
-                                  ' Petrol vehicle Mileage ',
-                                  maxLines: 1,
-                                  textAlign: TextAlign.start,
+                                  ' Petrol vehicle Mileage (' +
+                                      dropdownValue.toString() +
+                                      '/Ltr)',
+                                  maxLines: 2,
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
@@ -861,8 +871,7 @@ class _WelcomePageWidgetState extends State<WelcomePageWidget> {
                               controller: petrolVehicalMileageController,
                               obscureText: false,
                               decoration: InputDecoration(
-                                hintText:
-                                    '40 ' + dropdownValue.toString() + '/Ltr',
+                                hintText: '40 ',
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 17,

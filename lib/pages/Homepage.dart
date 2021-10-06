@@ -316,10 +316,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           textAlign: TextAlign.center,
         )),
         content: Container(
-          height: 30,
+          height: 80,
           child: Center(
             child: Text(
-              "Please Give Location Access - For Real time battery usage",
+              "Please Give Location Access - For Calculation of Real time battery usage",
               style: TextStyle(
                 color: Colors.white,
               ),
