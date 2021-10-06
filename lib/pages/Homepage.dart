@@ -15,6 +15,7 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 bool? icon = false;
 bool start = false;
+bool? isStart = true;
 bool speedcheck = false;
 String speedCheck = "Still";
 double? batteryUsed = 0.00;
@@ -732,6 +733,72 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     ),
                   ],
                 ),
+                isStart == true
+                    ? Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 30, 0, 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "1. Press Start to begin or continue your trip",
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontStyle: FontStyle.italic),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "2. Press Pause to halt the trip",
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontStyle: FontStyle.italic),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "3. Press Stop to log your trip",
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontStyle: FontStyle.italic),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "4. Long press Stop to discard the trip",
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontStyle: FontStyle.italic),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(),
               ],
             ),
             // child: Container(
