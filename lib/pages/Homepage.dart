@@ -319,7 +319,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           height: 30,
           child: Center(
             child: Text(
-              "Please Give Location Access",
+              "Please Give Location Access - For Real time battery usage",
               style: TextStyle(
                 color: Colors.white,
               ),
