@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mileagecalculator/adMobHelper.dart';
 import 'package:mileagecalculator/pages/Homepage.dart';
 import 'package:mileagecalculator/pages/Savings.dart';
 import 'package:mileagecalculator/pages/WelcomePage.dart';
@@ -12,7 +11,7 @@ import 'package:mileagecalculator/Database/database.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  AdMobHelper.initialization();
+  //AdMobHelper.initialization();
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   trip_name = prefs.getString('trip_name');

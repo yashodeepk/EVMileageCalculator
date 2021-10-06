@@ -8,7 +8,6 @@ import 'package:mileagecalculator/Database/database.dart';
 import 'package:mileagecalculator/Database/datamodel.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:mileagecalculator/adMobHelper.dart';
 import 'package:mileagecalculator/pages/WelcomePage.dart';
 import 'package:mileagecalculator/pages/infoPage.dart';
 
@@ -25,14 +24,14 @@ class _CompareWidgetState extends State<CompareWidget> {
   late DB db;
   var savings = 0.00;
 
-  AdMobHelper adhelper = new AdMobHelper();
+  //AdMobHelper adhelper = new AdMobHelper();
 
   @override
   void initState() {
     super.initState();
     db = DB();
     getdata();
-    adhelper.createInterAd();
+    //adhelper.createInterAd();
   }
 
   void reload() {
@@ -97,11 +96,11 @@ class _CompareWidgetState extends State<CompareWidget> {
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      SizedBox(
-                          height: 50,
-                          child: AdWidget(
-                              ad: AdMobHelper.getBannerAd()..load(),
-                              key: UniqueKey())),
+                      // SizedBox(
+                      //     height: 50,
+                      //     child: AdWidget(
+                      //         ad: AdMobHelper.getBannerAd()..load(),
+                      //         key: UniqueKey())),
                       Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
@@ -248,7 +247,7 @@ class _CompareWidgetState extends State<CompareWidget> {
           style: TextStyle(fontSize: 16),
         ),
         onPressed: () {
-          adhelper.showInterAd();
+          //adhelper.showInterAd();
           Navigator.push(
             context,
             MaterialPageRoute(

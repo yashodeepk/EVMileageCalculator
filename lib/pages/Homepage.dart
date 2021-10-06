@@ -13,8 +13,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
-import '../adMobHelper.dart';
-
 bool? icon = false;
 bool start = false;
 bool speedcheck = false;
@@ -54,7 +52,7 @@ void callback() {
 }
 
 class _HomePageWidgetState extends State<HomePageWidget> {
-  AdMobHelper adhelper = new AdMobHelper();
+  //AdMobHelper adhelper = new AdMobHelper();
   bool get isPlaying => _controller.isActive;
 
   bool button = false;
@@ -569,7 +567,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           _positionStreamSubscription!.pause();
                         });
                         _stopForegroundTask();
-                        adhelper.showInterAd();
+                        //adhelper.showInterAd();
                       },
                       child: FloatingActionButton.extended(
                         label: Text("Stop", style: TextStyle(fontSize: 16)),
